@@ -1,0 +1,19 @@
+{
+  "name": "todo-app-backend",
+  "version": "1.0.0",
+  "description": "nodejs / express backend app for my todo-list app on github",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SDE-ADNAN/adnans-todo-backend.git"
+  },
+  "author": "SDE-ADNAN",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SDE-ADNAN/adnans-todo-backend/issues"
+  },
+  "homepage": "https://github.com/SDE-ADNAN/adnans-todo-backend#readme"
+}
