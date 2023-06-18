@@ -7,6 +7,13 @@ const app = express();
 
 const port = 3030;
 
+const cors = require('cors');
+
+// ...
+
+app.use(cors());
+
+
 app.use((req,res,next)=>{
     next();
 })
@@ -17,7 +24,7 @@ app.get("/",(req,res)=>{
 })
 app.get("/getJson",(req,res)=>{
     console.log(req.headers)
-    res.send({
+    res.status(200).send({
         name: "ADNAN KHAN",
         post: "Software engineer",
     })
