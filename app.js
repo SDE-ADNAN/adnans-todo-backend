@@ -20,14 +20,14 @@ app.use((req,res,next)=>{
 
 app.get("/",(req,res)=>{
     console.log(req.headers)
-    res.sendFile( __dirname + "/index.html" )
-})
-app.get("/getJson",(req,res)=>{
-    console.log(req.headers)
     res.status(200).send({
         name: "ADNAN KHAN",
         post: "Software engineer",
     })
+})
+app.get("/getJson",(req,res)=>{
+    console.log(req.headers)
+    res.sendFile( __dirname + "/index.html" )
 })
 
 
