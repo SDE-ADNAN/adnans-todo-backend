@@ -8,4 +8,5 @@ exports.getJson = (req, res, next) => {
         path:path,
         desiredLPA:"55LPA"
     });
+    res.redirect('/')
   };
