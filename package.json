@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon functions/app.js",
-    "start-server": "node app.js",
-    "build": "netlify deploy --prod"
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "start-server": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -24,9 +24,6 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.3",
-    "netlify-cli": "^12.7.2",
-    "netlify-lambda": "^2.0.15",
-    "serverless-http": "^2.7.0"
+    "express": "^4.16.3"
   }
 }
