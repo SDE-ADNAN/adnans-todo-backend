@@ -7,41 +7,69 @@ const p = path.join(
   'todos.json'
 );
 
-// const getProductsFromFile = cb => {
-//   fs.readFile(p, (err, fileContent) => {
-//     if (err) {
-//       cb([]);
-//     } else {
-//       cb(JSON.parse(fileContent));
-//     }
-//   });
-// };
-
-module.exports = class Product {
-  constructor(title, imageUrl, description, price) {
-    this.title = title;
-    this.imageUrl = imageUrl;
-    this.description = description;
-    this.price = price;
+function generateUniqueId() {
+    const timestamp = new Date().getTime();
+    const randomNumber = Math.floor(Math.random() * 100000);
+    return `${timestamp}_${randomNumber}`;
   }
 
-  save() {
-    this.id = Math.random().toString();
-    getProductsFromFile(products => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), err => {
+const getTodosFromFile = cb => {
+  fs.readFile(p, (err, fileContent) => {
+    if (err) {
+      cb([]);
+    } else {
+      cb(JSON.parse(fileContent));
+    }
+  });
+};
+
+const findTodoById = (id, todos)=> {
+    for (const todo of todos) {
+      if (todo.id === id) {
+        return todo;
+      } else if (todo.todo.length > 0) {
+        const foundTodo = findTodoById(id, todo.todo);
+        if (foundTodo) {
+          return foundTodo;
+        }
+      }
+    }
+    return undefined;
+  };
+
+module.exports = class Todo {
+  constructor(title, todo, isCreated, showInput,isCompleted,showSubtodos) {
+    this.title= title;
+    this.todo= todo;
+    this.isCreated= isCreated;
+    this.showInput= showInput;
+    this.isCompleted=isCompleted;
+    this.showSubtodos=showSubtodos;
+  }
+
+  save(parentId) {
+    this.id= generateUniqueId()
+    getTodosFromFile(todos => {
+      const parentTodo = findTodoById(parentId, todos);
+      console.log(parentTodo)
+      if (parentTodo) {
+        parentTodo.todo.push(this);
+      } else {
+        todos.push(this);
+      }
+      fs.writeFile(p, JSON.stringify(todos), err => {
         console.log(err);
       });
     });
   }
 
   static fetchAll(cb) {
-    getProductsFromFile(cb);
+    getTodosFromFile(cb);
   }
 
   static findById(id, cb){
-    getProductsFromFile(products => {
-      const product = products.find(p => p.id === id);
+    getTodosFromFile(todos => {
+      const product = findTodoById(id,todos);
       cb(product);
     })
   }
