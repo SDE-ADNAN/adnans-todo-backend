@@ -20,6 +20,7 @@ exports.postTodo = (req, res, next) => {
     // Todo.fetchAll((todos)=>{
     //     res.json(todos)
     // })
+    console.log(req.body)
     res.json(req.body)
     res.end();
   };

@@ -5,11 +5,12 @@ const bodyParser = require('body-parser');
 const dotenv = require("dotenv")
 const adminRoutes = require('./routes/admin');
 const app = express();
+const cors = require('cors');
 
 dotenv.config({
     path:"./ENV/config.env"
 })
-
+app.use(cors());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
