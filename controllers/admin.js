@@ -21,5 +21,5 @@ exports.postTodo = (req, res, next) => {
     //     res.json(todos)
     // })
     console.log(JSON.stringify(req.body))
-    res.json(req.body)
+    res.status(200).json(req.body)
   };
