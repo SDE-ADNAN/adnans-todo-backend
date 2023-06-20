@@ -1,34 +1,18 @@
 const path = require('path');
-
 const path2 = require("./utils/path")
-
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const dotenv = require("dotenv")
 const adminRoutes = require('./routes/admin');
+const app = express();
 
 dotenv.config({
     path:"./ENV/config.env"
 })
 
-const app = express();
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// app.use((req,res,next)=>{
-//     next();
-// })
-
-// app.get("/",(req,res)=>{
-//     console.log(req.headers)
-//     res.status(200).send({
-//         name: "ADNAN KHAN",
-//         post: "Software engineer",
-//     })
-// })
-// app.get("/getJson",(req,res)=>{
-//     console.log(req.headers)
-//     res.sendFile( __dirname + "/index.html" )
-// })
 app.use('/admin', adminRoutes);
 
 app.listen(process.env.PORT,()=>{
