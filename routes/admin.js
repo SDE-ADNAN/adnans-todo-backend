@@ -6,6 +6,7 @@ const adminController = require('../controllers/admin');
 
 const router = express.Router();
 
-router.get('/', adminController.getJson);
+router.get('/getAllTodos', adminController.getAllTodos);
+router.post('/postTodo', adminController.postTodo);
 
 module.exports = router;
