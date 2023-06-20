@@ -14,11 +14,11 @@ dotenv.config({
 
 app.use(cors());
 
-app.use(bodyParser.json())
 const upload = multer(); // multer instance
 
 app.use(upload.any()); // middleware to handle form-data
 app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 
 app.use('/admin', adminRoutes);
 
