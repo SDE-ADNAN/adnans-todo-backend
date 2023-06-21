@@ -1,11 +1,13 @@
 const path = require('path');
 const path2 = require("./utils/path");
 const express = require('express');
+
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
 const dotenv = require("dotenv");
 const adminRoutes = require('./routes/admin');
 const cors = require('cors');
-const multer = require('multer');
 const app = express();
 
 dotenv.config({
