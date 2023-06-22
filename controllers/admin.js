@@ -17,7 +17,7 @@ exports.postTodo = (req, res, next) => {
     const {parentId,title,isCreated,showInput,isCompleted,showSubtodos} = req.body
     const newTodo = new Todo(title, [] , isCreated==="true" , showInput==="true" , isCompleted==="true"  ,showSubtodos==="true")
     console.log("///////////newTodo////////////////")
-    console.log(JSON.stringify(newTodo))
+    console.log(newTodo)
     newTodo.save(parentId?parentId:"");
     // Todo.fetchAll((todos)=>{
     //     res.json(todos)
