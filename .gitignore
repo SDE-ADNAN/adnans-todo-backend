@@ -2,4 +2,8 @@
 node_modules/
 .DS_Store
 .netlify
-data/todos.json
+data/
+combined.log
+error.log
+warn.log
+debug.log
