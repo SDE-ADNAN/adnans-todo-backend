@@ -10,7 +10,13 @@ exports.getAllTodos = (req, res, next) => {
     Todo.fetchAll((todos)=>{
         res.json(todos)
     })
-  };
+};
+exports.getTodo = (req, res, next) => {
+    const reqTodoId = req.body.todoId
+    Todo.findById(reqTodoId,(todo)=>{
+        res.json(todo)
+    })
+};
 
 
 exports.postTodo = (req, res, next) => {
