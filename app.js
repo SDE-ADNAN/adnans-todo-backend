@@ -29,9 +29,3 @@ var host  = Object.values(require('os').networkInterfaces()).reduce((r, list) =>
 
 logger.info("your localhost is : "+ host);
 logger.info("for access on other devices (on same network) : "+ host +":"+process.env.PORT+"/");
-logger.info("hhhhhhhhhhhhhhhhhhhhh")
-
-logger.error("hi from error")
-logger.warn("hi from warn")
-
-// logger.log.info(`${pjson.name}`)
