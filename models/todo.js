@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const logger = require('../logger/Logger')
+const logger = require('../logger/index')
 
 const p = path.join(
   path.dirname(require.main.filename),
@@ -94,11 +94,13 @@ module.exports = class Todo {
   static deleteTodoById = (id,cb) => {
     getTodosFromFile(todos => {
       const deletedTodo = findTodoById(id,todos);
+      // const deletedTodoCatched = JSON.parse(JSON.stringify(deletedTodo||{}))
       const updatedTodos = deleteTodoById(id,todos);
       fs.writeFile(p, JSON.stringify(updatedTodos), err => {
         logger.error(err);
       });
       logger.warn(`Todo with ID : ${id} got DELETED`)
+      logger.warn(JSON.stringify(deletedTodo))
       cb(updatedTodos, deletedTodo)
     })
   };
