@@ -14,19 +14,13 @@ const levels = {
 
 const myFormat = printf(({ level, message, /*label*/ timestamp }) => {
 if(level === "error"){
-    return `${colors.red(`[ ${timestamp} ]`)} ${colors.bold.red(`[ level ${level} ]`)} : ${colors.red(`{{
-  ${message}
-}}`)}`;
+    return `${colors.red.bgRed(`[ ${timestamp} ]`)} ${colors.bold.red(`[ level ${level} ]`)} : [ ${colors.red(`${message}`)}]`;
 }
 if(level === "warn"){
-    return `${colors.yellow(`[ ${timestamp} ]`)} ${colors.bold.yellow(`[ level ${level} ]`)} : ${colors.yellow(`{{
-  ${message} 
-}}`)}`;
+    return `${colors.bgYellow(`[ ${timestamp} ]`)} ${colors.bold.yellow(`[ level ${level} ]`)} : [ ${colors.yellow(`${message}`)} ]`;
 }
 if(level === "info"){
-    return `${colors.white(`[ ${timestamp} ]`)} ${colors.bold.white(`[ level ${level} ]`)} : ${colors.white(`{{
-  ${message} 
-}}`)}`;
+    return `${colors.bgWhite(`[ ${timestamp} ]`)} ${colors.bold.white(`[ level ${level} ]`)} : [ ${colors.white(`${message}`)} ]`;
 }
 });
 
