@@ -8,19 +8,21 @@ const logger = require('../logger/index')
 exports.getAllTodos = (req, res, next) => {
     console.log("///////////newTodo////////////////".yellow)
     Todo.fetchAll((todos)=>{
-        res.json(todos)
+        return res.json(todos)
     })
 };
 exports.getTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
     Todo.findById(reqTodoId,(todo)=>{
-        res.json(todo)
+        return res.json(todo)
     })
 };
 exports.putTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
-    Todo.findById(reqTodoId,(todo)=>{
-        res.json(todo)
+    const reqNewTitle = req.body.title
+    const changeObj = {newTitle:reqNewTitle}
+    Todo.updateTodoById(reqTodoId,changeObj,(updatedTodo,updatedTodos)=>{
+        return res.json({updatedTodo,updatedTodos})
     })
 };
 exports.deleteTodo = (req, res, next) => {
@@ -53,5 +55,5 @@ exports.postTodo = (req, res, next) => {
     newTodo.save(parentId?parentId:"");
     console.log("///////////REQ.BODY////////////////")
     console.log(JSON.stringify(req.body))
-    res.status(200).json(req.body)
+    return res.status(200).json(req.body)
   };
