@@ -25,10 +25,14 @@ if(level === "info"){
 });
 
 const Logger=()=>{
+//   var getLabel = function (callingModule) {
+//     var parts = callingModule.filename.split('/');
+//     return parts[parts.length - 2] + '/' + parts.pop();
+// };
     return createLogger({
         level: 'info',
         format: combine(
-            // label({ label: 'right meow!' }),
+            // label(getLabel),
             timestamp({format:"DD-MM-YYYY HH:mm:ss"}),
             myFormat,
             colorize(),
