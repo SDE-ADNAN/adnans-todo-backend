@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const logger = require('../logger/Logger')
 
 const p = path.join(
   path.dirname(require.main.filename),
@@ -35,6 +36,22 @@ const findTodoById = (id, todos)=> {
       }
     }
     return undefined;
+  };
+
+  const deleteTodoById = (id , todos) => {
+    return todos.filter(todo => {
+      if (todo.id === id) {
+        // Exclude the todo with the given id
+        return false;
+      } else if (todo.todo.length > 0) {
+        // Recursively delete todos from the sub-todo list
+        todo.todo = deleteTodoById(id, todo.todo);
+        return true;
+      } else {
+        // Include the todo if it's not the one to be deleted
+        return true;
+      }
+    });
   };
 
 module.exports = class Todo {
@@ -73,4 +90,16 @@ module.exports = class Todo {
       cb(product);
     })
   }
+
+  static deleteTodoById = (id,cb) => {
+    getTodosFromFile(todos => {
+      const deletedTodo = findTodoById(id,todos);
+      const updatedTodos = deleteTodoById(id,todos);
+      fs.writeFile(p, JSON.stringify(updatedTodos), err => {
+        logger.error(err);
+      });
+      logger.warn(`Todo with ID : ${id} got DELETED`)
+      cb(updatedTodos, deletedTodo)
+    })
+  };
 };
