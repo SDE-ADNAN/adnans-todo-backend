@@ -2,7 +2,7 @@ const Todo = require("../models/todo");
 const path = require("../utils/path");
 // const chalk = require('chalk');
 const colors = require('colors');
-
+const logger = require('../logger/index')
 
 
 exports.getAllTodos = (req, res, next) => {
@@ -15,6 +15,32 @@ exports.getTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
     Todo.findById(reqTodoId,(todo)=>{
         res.json(todo)
+    })
+};
+exports.putTodo = (req, res, next) => {
+    const reqTodoId = req.body.todoId
+    Todo.findById(reqTodoId,(todo)=>{
+        res.json(todo)
+    })
+};
+exports.deleteTodo = (req, res, next) => {
+    const reqTodoId = req.body.todoId
+    if(!reqTodoId){
+        logger.error("inside if")
+        return res.json({errorMsg:"Please provide the Id  to delete Todo ",fieldMissing:true,requiredField:"todoId"})
+    }
+    Todo.deleteTodoById(reqTodoId,(updatedTodos,deletedTodo)=>{
+        logger.error("inside deleteTodoById")
+        let responseObj = {
+            updatedTodos,
+            deletedTodo,
+            todoDeleted:true,
+
+        }
+        if(deletedTodo === undefined || deletedTodo === null){
+            return res.json({error : true , errorMsg: ` No todo to delete with ID : ${reqTodoId}`})
+        }
+        return res.json(responseObj)
     })
 };
 
