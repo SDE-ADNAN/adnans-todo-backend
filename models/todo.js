@@ -54,6 +54,19 @@ const findTodoById = (id, todos)=> {
     });
   };
 
+
+  //Helper for changing a todo at a specific id
+const changeTodoById = (id, updatedTodo, todos) => {
+  return todos.map(todo => {
+    if (todo.id === id) {
+      return updatedTodo;
+    } else if (todo.todo.length > 0) {
+      return { ...todo, todo: changeTodoById(id, updatedTodo, todo.todo) };
+    } else {
+      return todo;
+    }
+  });
+};
 module.exports = class Todo {
   constructor(title, todo, isCreated, showInput,isCompleted,showSubtodos) {
     this.title= title;
@@ -86,8 +99,8 @@ module.exports = class Todo {
 
   static findById(id, cb){
     getTodosFromFile(todos => {
-      const product = findTodoById(id,todos);
-      cb(product);
+      const todo = findTodoById(id,todos);
+      cb(todo);
     })
   }
 
@@ -104,4 +117,19 @@ module.exports = class Todo {
       cb(updatedTodos, deletedTodo)
     })
   };
+
+  static updateTodoById (id ,changeObj, cb){
+    getTodosFromFile(todos => {
+      const updatedTodo = findTodoById(id,todos);
+      logger.error(id)
+      updatedTodo.title = changeObj.newTitle
+      const updatedTodos = changeTodoById(id ,updatedTodo,todos )
+      fs.writeFile(p, JSON.stringify(updatedTodos), err => {
+        logger.error(err);
+      });
+      logger.warn(`Todo with ID : ${id} got DELETED`)
+      logger.warn(JSON.stringify(updatedTodo))
+      cb(updatedTodo,updatedTodos);
+    })
+  }
 };
