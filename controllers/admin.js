@@ -6,7 +6,6 @@ const logger = require('../logger/index')
 
 
 exports.getAllTodos = (req, res, next) => {
-    console.log("///////////newTodo////////////////".yellow)
     Todo.fetchAll((todos)=>{
         return res.json(todos)
     })
@@ -19,7 +18,13 @@ exports.getTodo = (req, res, next) => {
 };
 exports.putTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
-    const reqNewTitle = req.body.title
+    const reqNewTitle = req.body.newTitle
+    if(!reqTodoId){
+        return res.json({errorMsg:"Please provide the Id  to PUT into a Todo ",fieldMissing:true,requiredField:"todoId"})
+    }
+    if(!reqNewTitle){
+        return res.json({errorMsg:"Please provide the newTitle  to PUT into a Todo ",fieldMissing:true,requiredField:"newTitle"})
+    }
     const changeObj = {newTitle:reqNewTitle}
     Todo.updateTodoById(reqTodoId,changeObj,(updatedTodo,updatedTodos)=>{
         return res.json({updatedTodo,updatedTodos})
@@ -28,11 +33,9 @@ exports.putTodo = (req, res, next) => {
 exports.deleteTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
     if(!reqTodoId){
-        logger.error("inside if")
         return res.json({errorMsg:"Please provide the Id  to delete Todo ",fieldMissing:true,requiredField:"todoId"})
     }
     Todo.deleteTodoById(reqTodoId,(updatedTodos,deletedTodo)=>{
-        logger.error("inside deleteTodoById")
         let responseObj = {
             updatedTodos,
             deletedTodo,
