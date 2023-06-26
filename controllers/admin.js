@@ -53,10 +53,10 @@ exports.deleteTodo = (req, res, next) => {
 exports.postTodo = (req, res, next) => {
     const {parentId,title} = req.body
     const newTodo = new Todo(title, [] , true , false,false,true)
-    console.log("///////////newTodo////////////////".yellow)
-    console.log(colors.red.underline(newTodo))
+    logger.info("///////////newTodo////////////////".yellow)
+    logger.warn(colors.red.underline(newTodo))
     newTodo.save(parentId?parentId:"");
-    console.log("///////////REQ.BODY////////////////")
-    console.log(JSON.stringify(req.body))
-    return res.status(200).json(req.body)
+    logger.info("///////////REQ.BODY////////////////")
+    logger.warn(JSON.stringify(req.body))
+    return res.status(200).json(newTodo)
   };
