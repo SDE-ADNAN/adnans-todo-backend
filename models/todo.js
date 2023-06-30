@@ -81,14 +81,14 @@ module.exports = class Todo {
     this.id= generateUniqueId()
     getTodosFromFile(todos => {
       const parentTodo = findTodoById(parentId, todos);
-      console.log(parentTodo)
+      logger.log(parentTodo)
       if (parentTodo) {
         parentTodo.todo.push(this);
       } else {
         todos.push(this);
       }
       fs.writeFile(p, JSON.stringify(todos), err => {
-        console.log(err);
+        logger.info(err);
       });
     });
   }
