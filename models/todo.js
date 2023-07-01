@@ -67,7 +67,21 @@ const changeTodoById = (id, updatedTodo, todos) => {
     }
   });
 };
+
+  /**
+  * @name Todo
+  * @param { object } object - { todoDetails } parameter
+  * @returns { object } object - { newTodo } 
+  * `{ title: todoDetails.title,
+  * todo: todoDetails.todo,
+    isCreated: todoDetails.isCreated,
+    showInput: todoDetails.showInput,
+    isCompleted: todoDetails.isCompleted,
+    showSubtodos: todoDetails.showSubtodos, }`
+  * @description Takes title , todo , isCreated , showInput, isCompleted, showSubtodos as args and creates a new todo , but doesn't saves it , u have to save it via `netTodo.save()` .
+  */
 module.exports = class Todo {
+
   constructor(title, todo, isCreated, showInput,isCompleted,showSubtodos) {
     this.title= title;
     this.todo= todo;
