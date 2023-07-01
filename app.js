@@ -23,6 +23,10 @@ app.use(bodyParser.json())
 
 app.use('/admin', adminRoutes);
 
+app.use('/',(req,res,next)=>{
+    res.send("<h1>Welcome to todo backend </h1>")
+})
+
 app.listen(process.env.PORT)
 
 var host  = Object.values(require('os').networkInterfaces()).reduce((r, list) => r.concat(list.reduce((rr, i) => rr.concat(i.family==='IPv4' && !i.internal && i.address || []), [])), [])
