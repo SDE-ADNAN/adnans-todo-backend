@@ -4,29 +4,39 @@ const path = require("../utils/path");
 const colors = require('colors');
 const logger = require('../logger/index')
 
+// title
+// todo
+// isCreated
+// showInput
+// isCompleted
+// showSubtodos
 
 exports.getAllTodos = (req, res, next) => {
     Todo.fetchAll((todos)=>{
         return res.json(todos)
     })
 };
+
 exports.getTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
     Todo.findById(reqTodoId,(todo)=>{
         return res.json(todo)
     })
 };
+
+/**
+ * @param {object} `{ title , todo , isCreated , showInput , isCompleted , showSubtodos }`
+**/
 exports.putTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
-    const reqNewTitle = req.body.newTitle
+    const editedTodo = req.body.editedTodo;
     if(!reqTodoId){
         return res.json({errorMsg:"Please provide the Id  to PUT into a Todo ",fieldMissing:true,requiredField:"todoId"})
     }
-    if(!reqNewTitle){
-        return res.json({errorMsg:"Please provide the newTitle  to PUT into a Todo ",fieldMissing:true,requiredField:"newTitle"})
+    if(!editedTodo){
+        return res.json({errorMsg:"Please provide the editedTodo  to PUT into a Todo ",fieldMissing:true,requiredField:"editedTodo"})
     }
-    const changeObj = {newTitle:reqNewTitle}
-    Todo.updateTodoById(reqTodoId,changeObj,(updatedTodo,updatedTodos)=>{
+    Todo.updateTodoById(reqTodoId,editedTodo,(updatedTodo,updatedTodos)=>{
         return res.json({updatedTodo,updatedTodos})
     })
 };
