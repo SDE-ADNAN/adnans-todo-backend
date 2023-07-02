@@ -134,9 +134,9 @@ module.exports = class Todo {
 
   static updateTodoById (id ,changeObj, cb){
     getTodosFromFile(todos => {
-      const updatedTodo = findTodoById(id,todos);
-      logger.error(id)
-      updatedTodo.title = changeObj.newTitle
+      let updatedTodo = findTodoById(id,todos);
+      logger.warn("found id to update todo : "+id)
+      updatedTodo = {...updatedTodo , ...changeObj}
       const updatedTodos = changeTodoById(id ,updatedTodo,todos )
       fs.writeFile(p, JSON.stringify(updatedTodos), err => {
         logger.error(err);
