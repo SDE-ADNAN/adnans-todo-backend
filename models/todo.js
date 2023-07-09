@@ -95,7 +95,7 @@ module.exports = class Todo {
     this.id= generateUniqueId()
     getTodosFromFile(todos => {
       const parentTodo = findTodoById(parentId, todos);
-      logger.log(parentTodo)
+      logger.info(parentTodo)
       if (parentTodo) {
         parentTodo.todo.push(this);
       } else {
