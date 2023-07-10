@@ -97,9 +97,9 @@ module.exports = class Todo {
       const parentTodo = findTodoById(parentId, todos);
       logger.info(parentTodo)
       if (parentTodo) {
-        parentTodo.todo.push(this);
+        parentTodo.todo.unshift(this);
       } else {
-        todos.push(this);
+        todos.unshift(this);
       }
       fs.writeFile(p, JSON.stringify(todos), err => {
         logger.info(err);
