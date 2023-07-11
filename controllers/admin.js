@@ -64,10 +64,11 @@ exports.deleteTodo = (req, res, next) => {
 exports.postTodo = (req, res, next) => {
     const {parentId,title} = req.body
     const newTodo = new Todo(title, [] , true , false,false,true)
-    logger.info("///////////newTodo////////////////".yellow)
     logger.warn(colors.red.underline(newTodo))
     newTodo.save(parentId?parentId:"");
-    logger.info("///////////REQ.BODY////////////////")
     logger.warn(JSON.stringify(req.body))
-    return res.status(200).json(newTodo)
+    Todo.fetchAll((allTodos)=>{
+        let resObj = {updatedTodos: allTodos,todoCreated:true,newTodo:newTodo,isSubTodo: parentId? true: false}
+        return res.status(200).json(resObj)
+    })
   };
