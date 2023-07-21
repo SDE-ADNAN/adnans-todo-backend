@@ -68,6 +68,18 @@ const changeTodoById = (id, updatedTodo, todos) => {
   });
 };
 
+const getCurrDateAndTime=()=>{
+  var date = new Date();
+  var dateStr =
+    ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
+    ("00" + date.getDate()).slice(-2) + "/" +
+    date.getFullYear() + " " +
+    ("00" + date.getHours()).slice(-2) + ":" +
+    ("00" + date.getMinutes()).slice(-2) + ":" +
+    ("00" + date.getSeconds()).slice(-2);
+    return  dateStr
+}
+
   /**
   * @name Todo
   * @param { object } object - { todoDetails } parameter
@@ -93,6 +105,7 @@ module.exports = class Todo {
 
   save(parentId) {
     this.id= generateUniqueId()
+    this.createdOn = getCurrDateAndTime()
     getTodosFromFile(todos => {
       const parentTodo = findTodoById(parentId, todos);
       logger.info(parentTodo)
@@ -136,12 +149,11 @@ module.exports = class Todo {
     getTodosFromFile(todos => {
       let updatedTodo = findTodoById(id,todos);
       logger.warn("found id to update todo : "+id)
-      updatedTodo = {...updatedTodo , ...changeObj}
+      updatedTodo = {...updatedTodo , ...changeObj,editedOn:getCurrDateAndTime()}
       const updatedTodos = changeTodoById(id ,updatedTodo,todos )
       fs.writeFile(p, JSON.stringify(updatedTodos), err => {
         logger.error(err);
       });
-      logger.warn(`Todo with ID : ${id} got DELETED`)
       logger.warn(JSON.stringify(updatedTodo))
       cb(updatedTodo,updatedTodos);
     })
