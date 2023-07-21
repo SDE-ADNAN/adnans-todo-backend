@@ -28,15 +28,16 @@ exports.getTodo = (req, res, next) => {
  * @param {object} `{ title , todo , isCreated , showInput , isCompleted , showSubtodos }`
 **/
 exports.putTodo = (req, res, next) => {
-    const { todoId, showSubtodos } = req.body;
-    console.log(req.body)
+    const { todoId, changeObj } = req.body;
+    console.log(req.body.changeObj)
     if(!todoId){
         return res.json({errorMsg:"Please provide the Id  to PUT into a Todo ",fieldMissing:true,requiredField:"todoId"})
     }
-    if(!showSubtodos){
-        return res.json({errorMsg:"Please provide the showSubtodos  to PUT into a Todo ",fieldMissing:true,requiredField:"showSubtodos"})
+    if(!changeObj){
+        return res.json({errorMsg:"Please provide the changeObj  to PUT into a Todo ",fieldMissing:true,requiredField:"changeObj"})
     }
-    let editedTodo = { showSubtodos : showSubtodos === "true" ? true : false }
+    let editedTodo = { ...JSON.parse(changeObj)}
+    logger.error("error---> "  + changeObj)
     Todo.updateTodoById(todoId,editedTodo,(updatedTodo,updatedTodos)=>{
         return res.json({updatedTodo,updatedTodos})
     })
