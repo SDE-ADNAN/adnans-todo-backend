@@ -1,10 +1,16 @@
+// lib imports
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const dotenv = require("dotenv");
-const adminRoutes = require('./routes/admin');
 const cors = require('cors');
+const mongoose = require('mongoose');
+
+// project imports
 const logger = require("./logger/index")
+const adminRoutes = require('./routes/admin');
+
+
 
 
 const app = express();
@@ -28,7 +34,31 @@ app.use('/',(req,res,next)=>{
     res.send("<h1>Welcome to todo backend </h1>")
 })
 
-app.listen(process.env.PORT)
+mongoose
+  .connect(
+    "mongodb+srv://adnan:KvsBaELOlau38FJr@cluster0.7jzqj8i.mongodb.net/?retryWrites=true&w=majority"
+  ,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(result => {
+    // User.findOne().then(user => {
+    //   if (!user) {
+    //     const user = new User({
+    //       name: 'Max',
+    //       email: 'max@test.com',
+    //       cart: {
+    //         items: []
+    //       }
+    //     });
+    //     user.save();
+    //   }
+    // });
+    app.listen(process.env.PORT);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
 var host  = Object.values(require('os').networkInterfaces()).reduce((r, list) => r.concat(list.reduce((rr, i) => rr.concat(i.family==='IPv4' && !i.internal && i.address || []), [])), [])
 
