@@ -1,4 +1,5 @@
 const Todo = require("../models/todo2");
+const subTodo = require("../models/subTodo");
 const path = require("../utils/path");
 // const chalk = require('chalk');
 const colors = require('colors');
@@ -44,6 +45,7 @@ exports.getSubTodo = (req, res, next) => {
  * @param {object} `{ title , todo , isCreated , showInput , isCompleted , showSubtodos }`
 **/
 exports.putTodo = (req, res, next) => {
+    console.log(req.body)
     const { todoId, changeObj } = req.body;
 
     Todo.findByIdAndUpdate(
@@ -73,10 +75,6 @@ exports.deleteTodo = (req, res, next) => {
         }else{
             return res.status(500).json("something went wrong")
         }
-        if(deletedTodo === undefined || deletedTodo === null){
-            return res.json({error : true , errorMsg: ` No todo to delete with ID : ${reqTodoId}`})
-        }
-        return res.json(responseObj)
     })
     .catch(err=>console.log(err))
 };
@@ -94,44 +92,28 @@ exports.postTodo = (req, res, next) => {
   };
 
 
-  exports.postSubTodo = (req, res, next) => {
-    const { parentId, subTodoTitle } = req.body;
-  
-    // Step 1: Find the parent todo document
-    Todo.findById(parentId)
-      .populate({
-        path: 'todo',
-      })
-      .exec()
-      .then((parentTodo) => {
-        if (!parentTodo) {
-          return res.status(404).json({ message: 'Parent todo not found.' });
-        }
-  
-        // Step 2: Create a new sub-todo document
-        const subTodo = new Todo({
-          title: subTodoTitle,
-          todo: [], // You can add sub-todos to this sub-todo if needed
-          isCreated: true,
-          showInput: false,
-          isCompleted: false,
-          showSubtodos: true,
-        });
-  
-        // Step 3: Push the new sub-todo's ObjectId into the parent todo's todo array
-        parentTodo.todo.push(subTodo);
-  
-        // Step 4: Save the parent todo document with the updated todo array
-        return parentTodo.save();
-      })
-      .then((savedParentTodo) => {
-        console.log('Sub-todo added to the parent todo:', savedParentTodo);
-        return res.status(200).json(savedParentTodo);
-      })
-      .catch((err) => {
-        console.error('Error adding sub-todo:', err);
-        return res.status(500).json({ message: 'Failed to add sub-todo.' });
-      });
-  };
-  
-  
+exports.postSubTodo = (req, res, next) => {
+const { parentId, subTodoTitle } = req.body;
+
+Todo.findById(parentId)
+    .then((parentTodo) => {
+    if (!parentTodo) {
+        return res.status(404).json({ message: 'Parent todo not found.' });
+    }
+    const newSubTodo = new subTodo({
+        title: subTodoTitle,
+    });
+    return newSubTodo.save();
+    })
+    .then((savedSubTodo) => {
+    return Todo.findByIdAndUpdate(parentId, { $push: { todo: savedSubTodo._id }})
+    })
+    .then((updatedParentTodo) => {
+    console.log('Sub-todo added to the parent todo:', updatedParentTodo);
+    return res.status(200).json(updatedParentTodo);
+    })
+    .catch((err) => {
+    console.error('Error adding sub-todo:', err);
+    return res.status(500).json({ message: 'Failed to add sub-todo.' });
+    });
+};
