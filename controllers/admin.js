@@ -94,24 +94,29 @@ exports.postTodo = (req, res, next) => {
 
 
 exports.postSubTodo = (req, res, next) => {
-const { parentId, subTodoTitle } = req.body;
-
+    const { parentId, subTodoTitle } = req.body;
     Todo.findById(parentId)
         .then((parentTodo) => {
+            console.log(parentTodo)
         if (!parentTodo) {
             return res.status(404).json({ message: 'Parent todo not found.' });
+        }else{
+            const newSubTodo = new subTodo({
+                title: subTodoTitle,
+            });
+            return newSubTodo.save();
         }
-        const newSubTodo = new subTodo({
-            title: subTodoTitle,
-        });
-        return newSubTodo.save();
     })
         .then((savedSubTodo) => {
-        return Todo.findByIdAndUpdate(parentId, { $push: { todo: savedSubTodo._id }})
+            if(savedSubTodo){
+                return Todo.findByIdAndUpdate(parentId, { $push: { todo: savedSubTodo._id }})
+            }
     })
         .then((updatedParentTodo) => {
-        console.log('Sub-todo added to the parent todo:', updatedParentTodo);
+            if(updatedParentTodo){
+                console.log('Sub-todo added to the parent todo:', updatedParentTodo);
         return res.status(200).json(updatedParentTodo);
+            }
     })
         .catch((err) => {
         console.error('Error adding sub-todo:', err);
