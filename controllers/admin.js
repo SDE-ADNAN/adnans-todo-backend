@@ -7,6 +7,8 @@ const logger = require('../logger/index')
 
 exports.getAllTodos = (req, res, next) => {
     Todo.find()
+    .populate('todo')
+    .exec()
     .then(Todos => {
         console.log(Todos);
         return res.json(Todos)
