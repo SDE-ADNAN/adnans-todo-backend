@@ -47,11 +47,12 @@ exports.getSubTodo = (req, res, next) => {
 exports.putTodo = (req, res, next) => {
     console.log(req.body)
     const { todoId, changeObj } = req.body;
+    const parsedChangeObj = JSON.parse(changeObj);
 
     Todo.findByIdAndUpdate(
       todoId,
-      { ...changeObj},
-    //   { new: true } // Return the updated document after the update
+      { $set:parsedChangeObj},
+      { new: true } // Return the updated document after the update
     ).then(updatedTodo=>{
         if(!updatedTodo){
             return res.status(404).json({ message: 'Todo not found.' });
