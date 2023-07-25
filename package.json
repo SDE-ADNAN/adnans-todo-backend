@@ -2,6 +2,9 @@
   "name": "todo-app-backend",
   "version": "1.0.0",
   "description": "nodejs / express backend app for my todo-list app on github",
+  "engines": {
+    "node": "14.x"
+  },
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
