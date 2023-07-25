@@ -18,7 +18,9 @@ exports.getAllTodos = (req, res, next) => {
 
 exports.getTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
-    Todo.findById(reqTodoId,(todo)=>{
+    Todo.findById(reqTodoId)
+    .then(todo=>{
+        if(todo)
         return res.json(todo)
     })
 };
