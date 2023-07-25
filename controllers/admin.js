@@ -66,18 +66,19 @@ exports.deleteTodo = (req, res, next) => {
     if(!reqTodoId){
         return res.json({errorMsg:"Please provide the Id  to delete Todo ",fieldMissing:true,requiredField:"todoId"})
     }
-    Todo.deleteTodoById(reqTodoId,(updatedTodos,deletedTodo)=>{
-        let responseObj = {
-            updatedTodos,
-            deletedTodo,
-            todoDeleted:true,
-
+    Todo.findByIdAndDelete(reqTodoId)
+    .then(deletedTodo=>{
+        if(deletedTodo){
+            return res.status(200).json(deletedTodo)
+        }else{
+            return res.status(500).json("something went wrong")
         }
         if(deletedTodo === undefined || deletedTodo === null){
             return res.json({error : true , errorMsg: ` No todo to delete with ID : ${reqTodoId}`})
         }
         return res.json(responseObj)
     })
+    .catch(err=>console.log(err))
 };
 
 
