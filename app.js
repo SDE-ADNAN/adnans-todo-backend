@@ -36,11 +36,9 @@ app.use('/',(req,res,next)=>{
 
 mongoose
   .connect(
-    "mongodb+srv://adnan:KvsBaELOlau38FJr@cluster0.7jzqj8i.mongodb.net/?retryWrites=true&w=majority"
-  ,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+    // "mongodb+srv://Talha:Talha@cluster0.7jzqj8i.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://adnan:KvsBaELO1au38FJr@cluster0.7jzqj8i.mongodb.net/?retryWrites=true&w=majority"
+  )
   .then(result => {
     // User.findOne().then(user => {
     //   if (!user) {
@@ -55,6 +53,7 @@ mongoose
     //   }
     // });
     app.listen(process.env.PORT);
+    logger.warn("////////////// MONGODB CONNECTED //////////////")
   })
   .catch(err => {
     console.log(err);
