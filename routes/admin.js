@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/getAllTodos', adminController.getAllTodos);
 router.get('/getTodo', adminController.getTodo);
+router.get('/getSubTodo', adminController.getSubTodo);
 router.post('/postTodo', adminController.postTodo);
 router.post('/postSubTodo', adminController.postSubTodo);
 router.put('/putTodo', adminController.putTodo);
