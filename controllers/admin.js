@@ -79,6 +79,35 @@ exports.deleteTodo = (req, res, next) => {
     })
     .catch(err=>console.log(err))
 };
+exports.deleteSubTodo = (req, res, next) => {
+    const subTodoId = req.body.subTodoId
+    const parentTodoId = req.body.parentTodoId
+    console.log(req.body)
+
+    Todo.findByIdAndUpdate(
+        parentTodoId,
+        {$pull: {todo:subTodoId}},
+        {new:true}
+        )
+    .then((updatedParentTodo)=>{
+        if(!updatedParentTodo){
+            return res.status(404).json({message: 'Parent Todo not found'})
+        }
+
+        return subTodo.findByIdAndDelete(subTodoId)
+    })
+    .then((deletedSubTodo)=>{
+        if(!deletedSubTodo){
+            return res.status(404).json({message:"Sub-todo not found"})
+        }
+
+        return res.status(200).json({message:'Sub-todo deleted successfully'})
+    })
+    .catch(err=>{
+        console.log('Error deleting sub-Todo: ',err);
+        return res.status(500).json({message:'failed to delete sub-todo.'})
+    })
+};
 
 
 exports.postTodo = (req, res, next) => {
