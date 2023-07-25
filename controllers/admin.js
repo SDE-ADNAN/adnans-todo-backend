@@ -95,25 +95,25 @@ exports.postTodo = (req, res, next) => {
 exports.postSubTodo = (req, res, next) => {
 const { parentId, subTodoTitle } = req.body;
 
-Todo.findById(parentId)
-    .then((parentTodo) => {
-    if (!parentTodo) {
-        return res.status(404).json({ message: 'Parent todo not found.' });
-    }
-    const newSubTodo = new subTodo({
-        title: subTodoTitle,
-    });
-    return newSubTodo.save();
+    Todo.findById(parentId)
+        .then((parentTodo) => {
+        if (!parentTodo) {
+            return res.status(404).json({ message: 'Parent todo not found.' });
+        }
+        const newSubTodo = new subTodo({
+            title: subTodoTitle,
+        });
+        return newSubTodo.save();
     })
-    .then((savedSubTodo) => {
-    return Todo.findByIdAndUpdate(parentId, { $push: { todo: savedSubTodo._id }})
+        .then((savedSubTodo) => {
+        return Todo.findByIdAndUpdate(parentId, { $push: { todo: savedSubTodo._id }})
     })
-    .then((updatedParentTodo) => {
-    console.log('Sub-todo added to the parent todo:', updatedParentTodo);
-    return res.status(200).json(updatedParentTodo);
+        .then((updatedParentTodo) => {
+        console.log('Sub-todo added to the parent todo:', updatedParentTodo);
+        return res.status(200).json(updatedParentTodo);
     })
-    .catch((err) => {
-    console.error('Error adding sub-todo:', err);
-    return res.status(500).json({ message: 'Failed to add sub-todo.' });
+        .catch((err) => {
+        console.error('Error adding sub-todo:', err);
+        return res.status(500).json({ message: 'Failed to add sub-todo.' });
     });
 };
