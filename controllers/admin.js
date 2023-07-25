@@ -45,19 +45,22 @@ exports.getSubTodo = (req, res, next) => {
 **/
 exports.putTodo = (req, res, next) => {
     const { todoId, changeObj } = req.body;
-    console.log(req.body.changeObj)
-    if(!todoId){
-        return res.json({errorMsg:"Please provide the Id  to PUT into a Todo ",fieldMissing:true,requiredField:"todoId"})
-    }
-    if(!changeObj){
-        return res.json({errorMsg:"Please provide the changeObj  to PUT into a Todo ",fieldMissing:true,requiredField:"changeObj"})
-    }
-    let editedTodo = { ...JSON.parse(changeObj)}
-    logger.error("error---> "  + changeObj)
-    Todo.updateTodoById(todoId,editedTodo,(updatedTodo,updatedTodos)=>{
-        return res.json({updatedTodo,updatedTodos})
+
+    Todo.findByIdAndUpdate(
+      todoId,
+      { ...changeObj},
+    //   { new: true } // Return the updated document after the update
+    ).then(updatedTodo=>{
+        if(!updatedTodo){
+            return res.status(404).json({ message: 'Todo not found.' });
+        }
+        return res.status(200).json(updatedTodo);
     })
-};
+    .catch(err=>{
+        console.error('Error updating todo:', err);
+        return res.status(500).json({ message: 'Failed to update todo.' });
+    })
+  }
 exports.deleteTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
     if(!reqTodoId){
