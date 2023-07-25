@@ -22,6 +22,21 @@ exports.getTodo = (req, res, next) => {
     .then(todo=>{
         if(todo)
         return res.json(todo)
+        else res.json({message:"no todo found "})
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+};
+
+exports.getSubTodo = (req, res, next) => {
+    const reqTodoId = req.body.todoId
+    subTodo.findById(reqTodoId)
+    .then(todo=>{
+        return res.json(todo)
+    })
+    .catch(err=>{
+        console.log(err)
     })
 };
 
