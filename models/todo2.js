@@ -7,7 +7,7 @@ const todoSchema = new mongoose.Schema({
     todo:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Todo',
+            ref:'SubTodo',
         }
     ],
     isCreated: {
