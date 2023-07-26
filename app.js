@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 // project imports
 const logger = require("./logger/index")
 const adminRoutes = require('./routes/admin');
+const authRoutes = require('./routes/auth');
 
 
 
@@ -28,6 +29,7 @@ app.use(upload.any()); // middleware to handle form-data
 // app.use(bodyParser.json())
 // app.use(express.json())
 
+app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 
 app.use('/',(req,res,next)=>{
