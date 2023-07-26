@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const Todo = require("./Todo")
+const Todo = require("./Todo-Model")
 
 const userSchema = new mongoose.Schema(
     {

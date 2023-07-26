@@ -1,4 +1,4 @@
-const Todo = require("../models/Todo");
+const Todo = require("../models/Todo-Model");
 const subTodo = require("../models/SubTodo");
 const colors = require('colors');
 const logger = require('../logger/index');
@@ -102,13 +102,13 @@ exports.deleteTodo = (req, res, next) => {
     ).then((updatedUser) => {
         if (updatedUser) {
             Todo.findByIdAndDelete(reqTodoId)
-        .then(deletedTodo => {
-            if (deletedTodo) {
-                return res.status(200).json(deletedTodo)
-            } else {
-                return res.status(500).json("something went wrong")
-            }
-        })
+                .then(deletedTodo => {
+                    if (deletedTodo) {
+                        return res.status(200).json(deletedTodo)
+                    } else {
+                        return res.status(500).json("something went wrong")
+                    }
+                })
         }
     }).catch(err => console.log(err))
 };
@@ -119,7 +119,7 @@ exports.deleteSubTodo = (req, res, next) => {
     const userId = req.userId;
 
     Todo.findOneAndUpdate(
-        { _id: parentTodoId, user: userId }, 
+        { _id: parentTodoId, user: userId },
         { $pull: { todo: subTodoId } },
         { new: true }
     )
