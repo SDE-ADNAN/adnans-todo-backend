@@ -12,3 +12,4 @@ debug.log
 # env files
 .env
 .env.test
+ENV/config.env
