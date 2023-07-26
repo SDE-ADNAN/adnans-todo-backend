@@ -17,7 +17,7 @@ const authRoutes = require('./routes/auth');
 const app = express();
 
 dotenv.config({
-    path:"./ENV/config.env"
+  path: "./ENV/config.env"
 })
 
 app.use(cors());
@@ -32,8 +32,8 @@ app.use(upload.any()); // middleware to handle form-data
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 
-app.use('/',(req,res,next)=>{
-    res.send("<h1>Welcome to todo backend </h1>")
+app.use('/', (req, res, next) => {
+  res.send("<h1>Welcome to todo backend </h1>")
 })
 
 mongoose
@@ -60,7 +60,7 @@ mongoose
     console.log(err);
   });
 
-var host  = Object.values(require('os').networkInterfaces()).reduce((r, list) => r.concat(list.reduce((rr, i) => rr.concat(i.family==='IPv4' && !i.internal && i.address || []), [])), [])
+var host = Object.values(require('os').networkInterfaces()).reduce((r, list) => r.concat(list.reduce((rr, i) => rr.concat(i.family === 'IPv4' && !i.internal && i.address || []), [])), [])
 
-logger.info("your localhost is : http://localhost:"+ process.env.PORT);
-logger.info("for access on other devices (on same network) : http://"+ host +":"+process.env.PORT+"/");
+logger.info("your localhost is : http://localhost:" + process.env.PORT);
+logger.info("for access on other devices (on same network) : http://" + host + ":" + process.env.PORT + "/");

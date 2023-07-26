@@ -3,33 +3,33 @@ const bcrypt = require("bcrypt");
 const Todo = require("./todo")
 
 const userSchema = new mongoose.Schema(
-{
-    userName: {
-    type: String,
-    required: true,
-    unique: true,
-    },
-    password: {
-    type: String,
-    required: true,
-    },
-    email: {
-    type: String,
-    required: true,
-    unique: true,
-    },
-    picUrl: {
-    type: String,
-    default: 'https://drive.google.com/file/d/17bH1aypjFtzvXEJuNKAkNV-ADIwvGthD/view?usp=sharing'
-    },
-    todos: [
     {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Todo',
-    }
-    ]
-},
-{ timestamps: true }
+        userName: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        picUrl: {
+            type: String,
+            default: 'https://drive.google.com/file/d/17bH1aypjFtzvXEJuNKAkNV-ADIwvGthD/view?usp=sharing'
+        },
+        todos: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Todo',
+            }
+        ]
+    },
+    { timestamps: true }
 );
 
 // Hash password before saving to the database
