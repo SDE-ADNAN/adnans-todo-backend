@@ -11,9 +11,6 @@ const logger = require("./logger/index")
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
 
-
-
-
 const app = express();
 
 dotenv.config({
@@ -41,18 +38,6 @@ mongoose
     `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.7jzqj8i.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(result => {
-    // User.findOne().then(user => {
-    //   if (!user) {
-    //     const user = new User({
-    //       name: 'Max',
-    //       email: 'max@test.com',
-    //       cart: {
-    //         items: []
-    //       }
-    //     });
-    //     user.save();
-    //   }
-    // });
     app.listen(process.env.PORT);
     logger.warn("////////////// MONGODB CONNECTED //////////////")
   })

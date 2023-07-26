@@ -41,9 +41,6 @@ exports.getSubTodo = (req, res, next) => {
         })
 };
 
-/**
- * @param {object} `{ title , todo , isCreated , showInput , isCompleted , showSubtodos }`
-**/
 exports.putTodo = (req, res, next) => {
     console.log(req.body)
     const { todoId, changeObj } = req.body;
@@ -64,12 +61,40 @@ exports.putTodo = (req, res, next) => {
             return res.status(500).json({ message: 'Failed to update todo.' });
         })
 }
+
+exports.putSubTodo = (req, res, next) => {
+    console.error(req.body)
+    const { todoId, changeObj } = req.body;
+    const parsedChangeObj = JSON.parse(changeObj);
+
+    subTodo.findByIdAndUpdate(
+        todoId,
+        { $set: parsedChangeObj },
+        { new: true } // Return the updated document after the update
+    ).then(updatedSubTodo => {
+        if (!updatedSubTodo) {
+            return res.status(404).json({ message: 'subTodo not found.' });
+        }
+        return res.status(200).json({ updatedSubTodo, message: 'Successfully updated subTodo. ' });
+    })
+        .catch(err => {
+            console.error('Error updating todo:', err);
+            return res.status(500).json({ message: 'Failed to update todo.' });
+        })
+}
+
 exports.deleteTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
     if (!reqTodoId) {
         return res.json({ errorMsg: "Please provide the Id  to delete Todo ", fieldMissing: true, requiredField: "todoId" })
     }
-    Todo.findByIdAndDelete(reqTodoId)
+    User.findOneAndUpdate(
+        { _id: req.userId },
+        { $pull: { todos: reqTodoId } },
+        { new: true }
+    ).then((updatedUser) => {
+        if (updatedUser) {
+            Todo.findByIdAndDelete(reqTodoId)
         .then(deletedTodo => {
             if (deletedTodo) {
                 return res.status(200).json(deletedTodo)
@@ -77,37 +102,40 @@ exports.deleteTodo = (req, res, next) => {
                 return res.status(500).json("something went wrong")
             }
         })
-        .catch(err => console.log(err))
+        }
+    }).catch(err => console.log(err))
 };
-exports.deleteSubTodo = (req, res, next) => {
-    const subTodoId = req.body.subTodoId
-    const parentTodoId = req.body.parentTodoId
-    console.log(req.body)
 
-    Todo.findByIdAndUpdate(
-        parentTodoId,
+exports.deleteSubTodo = (req, res, next) => {
+    const subTodoId = req.body.subTodoId;
+    const parentTodoId = req.body.parentTodoId;
+    const userId = req.userId;
+
+    Todo.findOneAndUpdate(
+        { _id: parentTodoId, user: userId }, 
         { $pull: { todo: subTodoId } },
         { new: true }
     )
         .then((updatedParentTodo) => {
             if (!updatedParentTodo) {
-                return res.status(404).json({ message: 'Parent Todo not found' })
+                return res.status(404).json({ message: 'Parent Todo not found or unauthorized' });
             }
 
-            return subTodo.findByIdAndDelete(subTodoId)
+            return subTodo.findByIdAndDelete(subTodoId);
         })
         .then((deletedSubTodo) => {
             if (!deletedSubTodo) {
-                return res.status(404).json({ message: "Sub-todo not found" })
+                return res.status(404).json({ message: 'Sub-todo not found' });
             }
 
-            return res.status(200).json({ message: 'Sub-todo deleted successfully' })
+            return res.status(200).json({ message: 'Sub-todo deleted successfully' });
         })
         .catch(err => {
             console.log('Error deleting sub-Todo: ', err);
-            return res.status(500).json({ message: 'failed to delete sub-todo.' })
-        })
+            return res.status(500).json({ message: 'Failed to delete sub-todo.' });
+        });
 };
+
 
 
 exports.postTodo = (req, res, next) => {
