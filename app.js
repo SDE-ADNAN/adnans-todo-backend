@@ -53,8 +53,6 @@ mongoose
     // });
     app.listen(process.env.PORT);
     logger.warn("////////////// MONGODB CONNECTED //////////////")
-    logger.error(`////// ${process.env.MONGO_USERNAME} ////// username `)
-    logger.error(`////// ${process.env.MONGO_PASSWORD} ////// password `)
   })
   .catch(err => {
     console.log(err);
