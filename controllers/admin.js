@@ -42,9 +42,16 @@ exports.getSubTodo = (req, res, next) => {
 };
 
 exports.putTodo = (req, res, next) => {
-    console.log(req.body)
     const { todoId, changeObj } = req.body;
-    const parsedChangeObj = JSON.parse(changeObj);
+    let parsedChangeObj = null;
+    try {
+        parsedChangeObj = JSON.parse(changeObj);
+    } catch (err) {
+        if (err) {
+            logger.error(err)
+            return res.status(500).json({ message: 'changeObj Json is invalid pls stringify it before sending in formData. ' })
+        }
+    }
 
     Todo.findByIdAndUpdate(
         todoId,
