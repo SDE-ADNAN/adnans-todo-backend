@@ -1,8 +1,8 @@
 const Todo = require("../models/Todo-Model");
-const subTodo = require("../models/SubTodo");
+const subTodo = require("../models/SubTodo-Model");
 const colors = require('colors');
 const logger = require('../logger/index');
-const User = require("../models/User");
+const User = require("../models/User-Model");
 const mongoose = require('mongoose');
 
 
