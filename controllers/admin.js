@@ -1,7 +1,5 @@
 const Todo = require("../models/todo");
 const subTodo = require("../models/subTodo");
-const path = require("../utils/path");
-// const chalk = require('chalk');
 const colors = require('colors');
 const logger = require('../logger/index')
 
