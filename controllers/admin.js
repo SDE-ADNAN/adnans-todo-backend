@@ -1,4 +1,4 @@
-const Todo = require("../models/todo2");
+const Todo = require("../models/todo");
 const subTodo = require("../models/subTodo");
 const path = require("../utils/path");
 // const chalk = require('chalk');
