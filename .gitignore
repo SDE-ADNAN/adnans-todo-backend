@@ -7,3 +7,8 @@ combined.log
 error.log
 warn.log
 debug.log
+
+
+# env files
+.env
+.env.test
