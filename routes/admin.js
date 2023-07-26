@@ -3,9 +3,12 @@ const path = require('path');
 const express = require('express');
 
 const adminController = require('../controllers/admin');
+const authenticateUser = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
+// need to place it right to use the below protected routes and set userId in req object
+router.use(authenticateUser)
 router.get('/getAllTodos', adminController.getAllTodos);
 router.get('/getTodo', adminController.getTodo);
 router.get('/getSubTodo', adminController.getSubTodo);
