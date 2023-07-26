@@ -4,28 +4,16 @@ const todoSchema = new mongoose.Schema({
     title:{
         type:String,required:true,
     },
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+    },
     todo:[
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:'SubTodo',
         }
     ],
-    isCreated: {
-        type: Boolean,
-        default: false
-    },
-    showInput: {
-        type: Boolean,
-        default: false
-    },
-    isCompleted: {
-        type: Boolean,
-        default: false
-    },
-    showSubtodos: {
-        type: Boolean,
-        default: false
-    }
-})
+},{ timestamps: true })
 
 module.exports = mongoose.model('Todo',todoSchema)

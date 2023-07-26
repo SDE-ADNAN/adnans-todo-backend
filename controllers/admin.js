@@ -1,11 +1,13 @@
 const Todo = require("../models/todo");
 const subTodo = require("../models/subTodo");
 const colors = require('colors');
-const logger = require('../logger/index')
+const logger = require('../logger/index');
+const User = require("../models/User");
+const mongoose = require('mongoose');
 
 
 exports.getAllTodos = (req, res, next) => {
-    Todo.find()
+    Todo.find({ user: req.userId })
     .populate('todo')
     .exec()
     .then(Todos => {
@@ -109,19 +111,34 @@ exports.deleteSubTodo = (req, res, next) => {
 
 
 exports.postTodo = (req, res, next) => {
-    const {parentId,title} = req.body
-    const newTodo = new Todo({title:title, todo:[] , isCreated:true , showInput:false,isCompleted:false,showSubTodo:true})
+    const { userId } = req;
+    const { title } = req.body;
+    const newTodo = new Todo({
+      title: title,
+      user: new mongoose.Types.ObjectId(userId), // to filter todos as per users
+      todo: [],
+    });
     newTodo.save()
-    .then((newTodo)=>{
-        logger.warn(colors.red.underline(newTodo))
-        return res.status(200).json(newTodo)
+    .then((newTodo) => {
+        // Add the newTodo's ObjectId to the user's todos array
+        User.findByIdAndUpdate(
+            userId,
+            { $push: { todos: newTodo._id } },
+            { new: true }
+        )
+        .then(() => {
+            return res.status(200).json(newTodo);
+        })
+        .catch((err) => console.log(err));
     })
-    .catch(err=>console.log(err))
+    .catch((err) => console.log(err));
   };
 
 
 exports.postSubTodo = (req, res, next) => {
+    const userId = req.userId
     const { parentId, subTodoTitle } = req.body;
+    let createdSubTodo = null
     Todo.findById(parentId)
         .then((parentTodo) => {
             console.log(parentTodo)
@@ -130,20 +147,24 @@ exports.postSubTodo = (req, res, next) => {
         }else{
             const newSubTodo = new subTodo({
                 title: subTodoTitle,
+                user: new mongoose.Types.ObjectId(userId)
             });
             return newSubTodo.save();
         }
     })
         .then((savedSubTodo) => {
             if(savedSubTodo){
+                createdSubTodo = savedSubTodo;
                 return Todo.findByIdAndUpdate(parentId, { $push: { todo: savedSubTodo._id }})
             }
+            return res.status(500).json({message:'Failed to add subTodo'})
     })
         .then((updatedParentTodo) => {
             if(updatedParentTodo){
                 console.log('Sub-todo added to the parent todo:', updatedParentTodo);
-        return res.status(200).json(updatedParentTodo);
-            }
+        return res.status(200).json({message:'Subtodo Created and Parent Updated',subTodo:createdSubTodo,updatedParentTodo:updatedParentTodo});
+        }
+        return res.status(207).json({message:'SubTodo created but parent Todo not updated'})
     })
         .catch((err) => {
         console.error('Error adding sub-todo:', err);

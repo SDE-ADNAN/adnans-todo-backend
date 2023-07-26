@@ -5,36 +5,36 @@ const jwt = require('jsonwebtoken')
 
 
 // registering user
-exports.registerUser =(req,res,next)=>{
-    const {userName , password , email , picUrl} = req.body
-
+exports.registerUser = (req, res, next) => {
+    const { userName, password, email, picUrl } = req.body;
+  
     // checking if the user exists
-    User.findOne(
-        {$or:[{userName},{email}]}
-    )
-    .then((existingUser)=>{
-        if(existingUser){
-            return res.status(409).json({message:'Username or email already exists. '});
+    User.findOne({ $or: [{ userName }, { email }] })
+      .then((existingUser) => {
+        if (existingUser) {
+          return res.status(409).json({ message: 'Username or email already exists. ' });
         }
-
+  
         const newUser = new User({
-            userName:userName,
-            password:password,
-            email:email,
-            picUrl:picUrl,
-        })
-        return newUser.save()
-    })
-    .then((newlyCreatedUser)=>{
-        if(newlyCreatedUser){
-            res.status(201).json({message:'User registered successfully. '})
+          userName: userName,
+          password: password,
+          email: email,
+          picUrl: picUrl,
+          todos: [] // Initialized an empty array for todos
+        });
+  
+        return newUser.save();
+      })
+      .then((newlyCreatedUser) => {
+        if (newlyCreatedUser) {
+          return res.status(201).json({ message: 'User registered successfully. ' });
         }
-    })
-    .catch((err)=>{
-        console.error('Error registering user: ',err)
-        return res.status(500).json({message:'Failed to register user. '})
-    })
-}
+      })
+      .catch((err) => {
+        console.error('Error registering user: ', err);
+        return res.status(500).json({ message: 'Failed to register user. ' });
+      });
+  };
 
 // Logging in the user and issuing jwt token
 exports.loginUser =(req,res,next)=>{
@@ -65,23 +65,29 @@ exports.loginUser =(req,res,next)=>{
 }
 
 // Get user Profile (requires authentication)
-exports.getUserProfile=(req,res)=>{
-    // the userId is obtained from the authentication middleware ( decoded JWT )
-
-    const {userId} = req;
-
+exports.getUserProfile = (req, res) => {
+    const { userId } = req;
+  
     User.findById(userId)
-    .then((user)=>{
-        if(!user){
-            return res.status(404).json({message:'User not Found'});
+    .populate({
+        path: 'todos',
+        model:'Todo', // Populate the todos field with actual Todo objects
+        populate: {
+          path: 'todo', // Populate the todo field inside each Todo object (subTodos)
+          model: 'SubTodo' // Use the SubTodo model to populate the todo field
         }
-        return res.status(200).json({user})
-    })
-    .catch(err=>{
+      })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ message: 'User not Found' });
+        }
+        return res.status(200).json({ user });
+      })
+      .catch((err) => {
         console.error('Error fetching user profile: ', err);
-        return res.status(500).json({message:'Failed to fetch user Profile'})
-    })
-}
+        return res.status(500).json({ message: 'Failed to fetch user Profile' });
+      });
+  };
 
 // Update user profile (requires authentication)
 exports.updateUserProfile=(req,res)=>{
