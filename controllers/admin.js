@@ -1,5 +1,5 @@
-const Todo = require("../models/todo");
-const subTodo = require("../models/subTodo");
+const Todo = require("../models/Todo");
+const subTodo = require("../models/SubTodo");
 const colors = require('colors');
 const logger = require('../logger/index');
 const User = require("../models/User");
