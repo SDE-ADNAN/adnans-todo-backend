@@ -38,7 +38,7 @@ mongoose
     `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.7jzqj8i.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(result => {
-    app.listen(process.env.PORT);
+    app.listen(process.env.PORT, '0.0.0.0');
     logger.warn("////////////// MONGODB CONNECTED //////////////")
   })
   .catch(err => {
