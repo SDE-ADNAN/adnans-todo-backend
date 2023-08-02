@@ -35,7 +35,7 @@ app.use('/', (req, res, next) => {
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.7jzqj8i.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.odxzrcq.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(result => {
     app.listen(process.env.PORT, '0.0.0.0');
