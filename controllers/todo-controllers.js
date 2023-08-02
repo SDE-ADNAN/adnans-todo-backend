@@ -17,9 +17,11 @@ exports.getAllTodos = (req, res, next) => {
         .catch(err => console.log(err));
 };
 
-exports.getTodo = (req, res, next) => {
-    const reqTodoId = req.body.todoId
-    Todo.findById(reqTodoId)
+exports.postGetTodo = (req, res, next) => {
+    const todoId = req.body.todoId
+    Todo.findById(todoId)
+        .populate('todo')
+        .exec()
         .then(todo => {
             if (todo)
                 return res.json(todo)
@@ -30,7 +32,7 @@ exports.getTodo = (req, res, next) => {
         })
 };
 
-exports.getSubTodo = (req, res, next) => {
+exports.postGetSubTodo = (req, res, next) => {
     const reqTodoId = req.body.todoId
     subTodo.findById(reqTodoId)
         .then(todo => {
@@ -147,32 +149,39 @@ exports.deleteSubTodo = (req, res, next) => {
 
 exports.postTodo = (req, res, next) => {
     const { userId } = req;
-    const { title } = req.body;
-    const newTodo = new Todo({
-        title: title,
-        user: new mongoose.Types.ObjectId(userId), // to filter todos as per users
-        todo: [],
-    });
-    newTodo.save()
-        .then((newTodo) => {
-            // Add the newTodo's ObjectId to the user's todos array
-            User.findByIdAndUpdate(
-                userId,
-                { $push: { todos: newTodo._id } },
-                { new: true }
-            )
-                .then(() => {
-                    return res.status(200).json(newTodo);
-                })
-                .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
+    const { title, description } = req.body;
+    console.error(req.body)
+    if (title && description) {
+        const newTodo = new Todo({
+            title: title,
+            description: description,
+            user: new mongoose.Types.ObjectId(userId), // to filter todos as per users
+            todo: [],
+        });
+        newTodo.save()
+            .then((newTodo) => {
+                // Add the newTodo's ObjectId to the user's todos array
+                User.findByIdAndUpdate(
+                    userId,
+                    { $push: { todos: newTodo._id } },
+                    { new: true }
+                )
+                    .then(() => {
+                        return res.status(200).json(newTodo);
+                    })
+                    .catch((err) => console.log(err));
+            })
+            .catch((err) => console.log(err));
+    } else {
+        return res.status(401).json({ message: 'some field is missing', bodyYouSent: req.body })
+    }
+
 };
 
 
 exports.postSubTodo = (req, res, next) => {
     const userId = req.userId
-    const { parentId, subTodoTitle } = req.body;
+    const { parentId, subTodoTitle, subTodoDescription } = req.body;
     let createdSubTodo = null
     Todo.findById(parentId)
         .then((parentTodo) => {
@@ -182,6 +191,7 @@ exports.postSubTodo = (req, res, next) => {
             } else {
                 const newSubTodo = new subTodo({
                     title: subTodoTitle,
+                    description: subTodoDescription,
                     user: new mongoose.Types.ObjectId(userId)
                 });
                 return newSubTodo.save();
