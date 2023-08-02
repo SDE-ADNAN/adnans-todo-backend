@@ -8,6 +8,10 @@ const todoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    description: {
+        type: String,
+        required: true,
+    },
     todo: [
         {
             type: mongoose.Schema.Types.ObjectId,
