@@ -212,11 +212,16 @@ const nodemailer = require('nodemailer');
 // App specific password from google 
 // where is it manage acc Page > security > 2 factor verification > App passwords > add new (others)
 const transporter = nodemailer.createTransport({
-    service: 'Mailgun',
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
+        type: 'oauth2',
         user: process.env.NODEMAILER_EMAIL,
         pass: process.env.NODEMAILER_APP_SPECIFIC_PASS,
     },
+    authMethod: 'PLAIN',
 });
 
 const sendmail = require('sendmail')();
