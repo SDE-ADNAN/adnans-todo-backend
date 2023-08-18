@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const Todo = require("./Todo-Model")
+const Todo = require("./Todo-Model");
 
 const userSchema = new mongoose.Schema(
     {
@@ -22,12 +22,29 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: 'https://drive.google.com/file/d/17bH1aypjFtzvXEJuNKAkNV-ADIwvGthD/view?usp=sharing'
         },
+        bio: {
+            type: String,
+            default: '',
+        },
+        location: {
+            type: String,
+            default: '',
+        },
+        website: {
+            type: String,
+            default: '',
+        },
+        social: {
+            twitter: String,
+            facebook: String,
+            instagram: String,
+        },
         todos: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Todo',
-            }
-        ]
+            },
+        ],
     },
     { timestamps: true }
 );
