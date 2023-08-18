@@ -13,6 +13,12 @@ const todoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    todo: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'SubTodo',
+        }
+    ],
     status: {
         type: String,
         enum: ['Todo', 'In Progress', 'Completed', 'On Hold'],
