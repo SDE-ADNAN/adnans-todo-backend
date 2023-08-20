@@ -139,16 +139,16 @@ exports.deleteUser = (req, res) => {
 // Forgot Password Route
 exports.forgotPassword = (req, res) => {
     const { email } = req.body;
-    console.log(email)
 
     User.findOne({ email })
         .then(user => {
             if (!user) {
                 return res.status(404).json({ message: 'User not found. ' });
             }
-            sendOTP(email, req)
+            sendOTP(email)
                 .then(otp => {
-                    return res.status(200).json({ message: 'OTP sent successfully.', storedOtp: req.storedOtp });
+                    req.session.storedOtp = otp; // Store OTP in session or a more persistent storage
+                    return res.status(200).json({ message: 'OTP sent successfully.', storedOtp: otp });
                 })
                 .catch(err => {
                     console.error('Error sending OTP: ', err);
@@ -161,15 +161,19 @@ exports.forgotPassword = (req, res) => {
         });
 };
 
+
 // Reset Password Route
 exports.resetPassword = (req, res) => {
-    const { email, otp, newPassword } = req.body;
+    // const { email, otp, newPassword } = req.body;
     console.log(req.body)
     console.log(req.storedOtp)
+    // const { userId } = req;
+    const { email, otp, newPassword } = req.body;
 
-    if (otp !== req.storedOtp) {
+    if (otp !== req.session.storedOtp) { // Retrieve OTP from session or storage
         return res.status(401).json({ message: 'Invalid OTP. ' });
     }
+
 
     User.findOne({ email })
         .then(user => {
@@ -204,10 +208,11 @@ exports.resetPassword = (req, res) => {
 };
 
 // Generate and send OTP
-const sendOTP = async (email, req) => {
+const sendOTP = async (email) => {
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
-    req.storedOtp = otp
-    logger.error(process.env.NODEMAILER_EMAIL,)
+
+    logger.error(process.env.NODEMAILER_EMAIL);
+
     let config = {
         service: 'gmail',
         port: 465,
@@ -216,15 +221,19 @@ const sendOTP = async (email, req) => {
             user: process.env.NODEMAILER_EMAIL,
             pass: process.env.NODEMAILER_APP_SPECIFIC_PASS,
         },
-    }
+    };
+
     let transporter = nodemailer.createTransport(config);
     let message = {
-        from: 'adnansdeofficial@gmail.com', // sender address
-        to: email, // list of receivers
-        subject: "Password recovery OTP", // Subject line
-        text: `Your OTP is ${otp}. Use this for resseting your password.`, // plain text body
-        html: `<b>Your OTP is ${otp}. Use this for resseting your password.</b>`, // html body
-    }
-    return transporter.sendMail(message)
+        from: 'adnansdeofficial@gmail.com',
+        to: email,
+        subject: "Password recovery OTP",
+        text: `Your OTP is ${otp}. Use this for resetting your password.`,
+        html: `<b>Your OTP is ${otp}. Use this for resetting your password.</b>`,
+    };
+
+    await transporter.sendMail(message);
+
+    return otp; // Return the generated OTP
 };
 
