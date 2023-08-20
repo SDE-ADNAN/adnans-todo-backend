@@ -2,6 +2,8 @@ const logger = require('../logger/index')
 const bcrypt = require('bcrypt');
 const User = require('../models/User-Model');
 const jwt = require('jsonwebtoken')
+const otpGenerator = require('otp-generator');
+const nodemailer = require('nodemailer');
 
 
 // registering user
@@ -133,7 +135,6 @@ exports.deleteUser = (req, res) => {
         })
 }
 
-let storedOTP = ''; // This variable will hold the OTP temporarily
 
 // Forgot Password Route
 exports.forgotPassword = (req, res) => {
@@ -145,12 +146,9 @@ exports.forgotPassword = (req, res) => {
             if (!user) {
                 return res.status(404).json({ message: 'User not found. ' });
             }
-
-            sendOTP(email)
+            sendOTP(email, req)
                 .then(otp => {
-                    storedOTP = otp; // Store the generated OTP in the variable
-
-                    return res.status(200).json({ message: 'OTP sent successfully.' });
+                    return res.status(200).json({ message: 'OTP sent successfully.', storedOtp: req.storedOtp });
                 })
                 .catch(err => {
                     console.error('Error sending OTP: ', err);
@@ -166,8 +164,10 @@ exports.forgotPassword = (req, res) => {
 // Reset Password Route
 exports.resetPassword = (req, res) => {
     const { email, otp, newPassword } = req.body;
+    console.log(req.body)
+    console.log(req.storedOtp)
 
-    if (otp !== storedOTP) {
+    if (otp !== req.storedOtp) {
         return res.status(401).json({ message: 'Invalid OTP. ' });
     }
 
@@ -188,7 +188,7 @@ exports.resetPassword = (req, res) => {
                 user.save()
                     .then(() => {
                         // Clear the stored OTP after successful password reset
-                        storedOTP = '';
+                        storedOtp = '';
                         return res.status(200).json({ message: 'Password reset successful.' });
                     })
                     .catch(err => {
@@ -203,57 +203,28 @@ exports.resetPassword = (req, res) => {
         });
 };
 
-
-
-const otpGenerator = require('otp-generator');
-const nodemailer = require('nodemailer');
-
-// Configure your nodemailer transporter
-// App specific password from google 
-// where is it manage acc Page > security > 2 factor verification > App passwords > add new (others)
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        type: 'oauth2',
-        user: process.env.NODEMAILER_EMAIL,
-        pass: process.env.NODEMAILER_APP_SPECIFIC_PASS,
-    },
-    authMethod: 'PLAIN',
-});
-
-const sendmail = require('sendmail')();
-
-
-
 // Generate and send OTP
-const sendOTP = async (email) => {
-    const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false });
+const sendOTP = async (email, req) => {
+    const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
+    req.storedOtp = otp
     logger.error(process.env.NODEMAILER_EMAIL,)
-
-    const mailOptions = {
-        from: process.env.NODEMAILER_EMAIL,
-        to: email,
-        subject: 'Password Reset OTP',
-        text: `Your OTP for password reset is: ${otp}`,
-    };
-    transporter.verify(function (error, success) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('SMTP server is ready to take our messages');
-        }
-    });
-
-
-    try {
-        await transporter.sendMail(mailOptions);
-        return otp;
-    } catch (error) {
-        console.error('Error sending OTP email: ', error);
-        throw new Error('Failed to send OTP.');
+    let config = {
+        service: 'gmail',
+        port: 465,
+        secure: false,
+        auth: {
+            user: process.env.NODEMAILER_EMAIL,
+            pass: process.env.NODEMAILER_APP_SPECIFIC_PASS,
+        },
     }
+    let transporter = nodemailer.createTransport(config);
+    let message = {
+        from: 'adnansdeofficial@gmail.com', // sender address
+        to: email, // list of receivers
+        subject: "Password recovery OTP", // Subject line
+        text: `Your OTP is ${otp}. Use this for resseting your password.`, // plain text body
+        html: `<b>Your OTP is ${otp}. Use this for resseting your password.</b>`, // html body
+    }
+    return transporter.sendMail(message)
 };
 
