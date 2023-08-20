@@ -24,8 +24,8 @@ router.put('/profile', authController.updateUserProfile)
 // delete user profile (requires authentication) 
 router.delete('/profile', authController.deleteUser)
 
-// router.post('/resetPassword', authController.resetPassword)
+router.post('/resetPassword', authController.resetPassword)
 
-// router.post('/forgotPassword', authController.forgotPassword)
+router.post('/forgotPassword', authController.forgotPassword)
 
 module.exports = router;
