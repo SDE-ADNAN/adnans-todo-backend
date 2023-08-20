@@ -21,7 +21,7 @@ const todoSchema = new mongoose.Schema({
     ],
     status: {
         type: String,
-        enum: ['Todo', 'In Progress', 'Completed', 'On Hold'],
+        enum: ['Todo', 'InProgress', 'Completed', 'OnHold'],
         default: 'Todo',
     },
     priority: {
