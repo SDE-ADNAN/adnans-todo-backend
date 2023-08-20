@@ -5,6 +5,7 @@ const multer = require('multer');
 const dotenv = require("dotenv");
 const cors = require('cors');
 const mongoose = require('mongoose');
+const session = require('express-session');
 
 // project imports
 const logger = require("./logger/index")
@@ -18,6 +19,11 @@ dotenv.config({
 })
 
 app.use(cors());
+app.use(session({
+  secret: 'your-secret-key', // Change this to your own secret key
+  resave: false,
+  saveUninitialized: true
+}));
 
 const upload = multer(); // multer instance
 
