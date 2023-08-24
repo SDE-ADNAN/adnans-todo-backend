@@ -39,40 +39,30 @@ exports.registerUser = (req, res, next) => {
 };
 
 // Logging in the user and issuing jwt token
-exports.loginUser = (req, res, next) => {
+exports.loginUser = async (req, res, next) => {
     const { userName, password } = req.body;
 
-    User.findOne({ userName })
-        .then((user) => {
+    const user = await User.findOne({ userName })
             if (!user) {
                 return res.status(404).json({ message: 'User Not Found. ' });
             }
-            // const reqHashedPass = jwt.sign({ _id: password }, process.env.SECRET)
-            // console.log('req.hashedPassword : ' + reqHashedPass)
-            // console.log('user.password : ' + user && user.password)
 
-            if (password !== user.password) {
-                return res.status(401).json({ message: 'Invalid Credentials. ' })
-            } else {
-                const token = jwt.sign({ userId: user._id }, process.env.SECRET);
+    const passwordsMatch = await bcrypt.compare(password, user.password);
+    console.log(passwordsMatch)
+
+    if (!passwordsMatch) {
+        return res.status(401).json({ message: 'Invalid Credentials. ' });
+    } else {
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET);
                 return res.status(200).json({ message: 'Login successful. ', token });
-            }
-            // bcrypt.compare(password, user.password).then((result) => {
-            //     logger.error(result)
-            //     if (!result) {
-            //         return res.status(401).json({ message: 'Invalid Credentials. ' });
-            //     }
-            //     const token = jwt.sign({ userId: user._id }, process.env.SECRET);
-            //     return res.status(200).json({ message: 'Login successful. ', token });
-            // }).catch((err) => {
-            //     console.error(err);
-            //     return res.status(500).json({ message: 'Failed to compare passwords.' });
-            // });
-        })
-        .catch((err) => {
-            console.error('Error logging in user: ', err);
-            return res.status(500).json({ message: 'Failed to Login user' });
-        });
+    }
+
+            // })
+        // })
+        // .catch((err) => {
+        //     console.error('Error logging in user: ', err);
+        //     return res.status(500).json({ message: 'Failed to Login user' });
+        // });
 };
 
 // Get user Profile (requires authentication)
