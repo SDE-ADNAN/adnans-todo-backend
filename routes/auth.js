@@ -12,6 +12,10 @@ router.post('/register', authController.registerUser);
 // Login user and issue JWT token {{ WORKING FINE }}
 router.post('/login', authController.loginUser);
 
+router.post('/resetPassword', authController.resetPassword)
+
+router.post('/forgotPassword', authController.forgotPassword)
+
 // need to place it right to use the below protected routes and set userId in req object
 router.use(authenticateUser)
 
@@ -24,8 +28,6 @@ router.put('/profile', authController.updateUserProfile)
 // delete user profile (requires authentication) 
 router.delete('/profile', authController.deleteUser)
 
-router.post('/resetPassword', authController.resetPassword)
 
-router.post('/forgotPassword', authController.forgotPassword)
 
 module.exports = router;
