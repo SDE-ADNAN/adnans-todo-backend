@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 
 // registering user
 exports.registerUser = (req, res, next) => {
+    logger.warn('registerUser called')
     const { userName, password, email, picUrl } = req.body;
 
     // checking if the user exists
@@ -40,6 +41,7 @@ exports.registerUser = (req, res, next) => {
 
 // Logging in the user and issuing jwt token
 exports.loginUser = async (req, res, next) => {
+    logger.warn('loginUser called')
     const { userName, password } = req.body;
 
     const user = await User.findOne({ userName })
@@ -67,6 +69,7 @@ exports.loginUser = async (req, res, next) => {
 
 // Get user Profile (requires authentication)
 exports.getUserProfile = (req, res) => {
+    logger.warn('getUserProfile called')
     const { userId } = req;
 
     User.findById(userId)
@@ -92,6 +95,7 @@ exports.getUserProfile = (req, res) => {
 
 // Update user profile (requires authentication)
 exports.updateUserProfile = (req, res) => {
+    logger.warn('updateUserProfile called')
     // The userId is obtained from the authentication middleware (decoded JWT)
 
     const { userId } = req;
@@ -117,6 +121,7 @@ exports.updateUserProfile = (req, res) => {
 
 // Delete user (requires authentication)
 exports.deleteUser = (req, res) => {
+    logger.warn('deleteUser called')
     // the userId is obtained from the authentication middleware (decoded JWT)
     const { userId } = req;
 
@@ -137,6 +142,7 @@ exports.deleteUser = (req, res) => {
 
 // Forgot Password Route
 exports.forgotPassword = (req, res) => {
+    logger.warn('forgotPassword called')
     const { email } = req.body;
 
     User.findOne({ email })
@@ -206,6 +212,7 @@ exports.forgotPassword = (req, res) => {
 //         });
 // };
 exports.resetPassword = async (req, res) => {
+    logger.warn('resetPassword called')
     const { email, otp, newPassword } = req.body;
 
     try {
@@ -238,6 +245,7 @@ exports.resetPassword = async (req, res) => {
 
 // Generate and send OTP
 const sendOTP = async (email) => {
+    logger.warn('sendOTP called')
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
 
     logger.error(process.env.NODEMAILER_EMAIL);
