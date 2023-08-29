@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
         },
         picUrl: {
             type: String,
-            default: 'https://drive.google.com/file/d/17bH1aypjFtzvXEJuNKAkNV-ADIwvGthD/view?usp=sharing'
+            default: 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png'
         },
         bio: {
             type: String,
@@ -54,18 +54,9 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function (next) {
     try {
         if (!this.isModified("password")) return next();
-
         const saltRounds = 10;
         const hash = await bcrypt.hash(this.password, saltRounds);
-
         this.password = hash;
-
-        // bcrypt.genSalt(10, function (err, salt) {
-        //     bcrypt.hash(this.password, salt, function (err, hash) {
-        //         this.password = hash;
-
-        //     });
-        // });
         next();
     } catch (error) {
         next(error);
