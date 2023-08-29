@@ -58,13 +58,6 @@ exports.loginUser = async (req, res, next) => {
         const token = jwt.sign({ userId: user._id }, process.env.SECRET);
                 return res.status(200).json({ message: 'Login successful. ', token });
     }
-
-            // })
-        // })
-        // .catch((err) => {
-        //     console.error('Error logging in user: ', err);
-        //     return res.status(500).json({ message: 'Failed to Login user' });
-        // });
 };
 
 // Get user Profile (requires authentication)
@@ -166,51 +159,6 @@ exports.forgotPassword = (req, res) => {
         });
 };
 
-
-// Reset Password Route
-// exports.resetPassword = (req, res) => {
-//     // const { email, otp, newPassword } = req.body;
-//     console.log(req.body)
-//     console.log(req.storedOtp)
-//     // const { userId } = req;
-//     const { email, otp, newPassword } = req.body;
-
-//     if (otp !== req.session.storedOtp) { // Retrieve OTP from session or storage
-//         return res.status(401).json({ message: 'Invalid OTP. ' });
-//     }
-
-
-//     User.findOne({ email })
-//         .then(user => {
-//             if (!user) {
-//                 return res.status(404).json({ message: 'User not found. ' });
-//             }
-
-//             // Update user's password
-//             bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
-//                 if (err) {
-//                     console.error('Error hashing password: ', err);
-//                     return res.status(500).json({ message: 'Failed to reset password.' });
-//                 }
-
-//                 user.password = hashedPassword;
-//                 user.save()
-//                     .then(() => {
-//                         // Clear the stored OTP after successful password reset
-//                         storedOtp = '';
-//                         return res.status(200).json({ message: 'Password reset successful.' });
-//                     })
-//                     .catch(err => {
-//                         console.error('Error saving user with new password: ', err);
-//                         return res.status(500).json({ message: 'Failed to reset password.' });
-//                     });
-//             });
-//         })
-//         .catch(err => {
-//             console.error('Error finding user: ', err);
-//             return res.status(500).json({ message: 'Failed to find user.' });
-//         });
-// };
 exports.resetPassword = async (req, res) => {
     logger.warn('resetPassword called')
     const { email, otp, newPassword } = req.body;
@@ -225,11 +173,6 @@ exports.resetPassword = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found. ' });
         }
-        // const salt = await bcrypt.genSalt(10);
-        // const hashedPassword = jwt.sign({ _id: newPassword }, process.env.SECRET);
-        // logger.warn(hashedPassword)
-        // logger.warn(user.password)
-
         user.password = newPassword;
         await user.save();
 
