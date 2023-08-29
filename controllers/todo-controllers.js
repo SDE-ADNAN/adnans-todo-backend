@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 
 exports.getAllTodos = (req, res, next) => {
+    logger.warn('getAllTodos called')
     Todo.find({ user: req.userId })
         .populate('todo')
         .exec()
@@ -18,6 +19,7 @@ exports.getAllTodos = (req, res, next) => {
 };
 
 exports.postGetTodo = (req, res, next) => {
+    logger.warn('postGetTodo called')
     const todoId = req.body.todoId
     Todo.findById(todoId)
         .populate('todo')
@@ -33,6 +35,7 @@ exports.postGetTodo = (req, res, next) => {
 };
 
 exports.postGetSubTodo = (req, res, next) => {
+    logger.warn('postGetSubTodo called')
     const reqTodoId = req.body.todoId
     subTodo.findById(reqTodoId)
         .then(todo => {
@@ -44,6 +47,7 @@ exports.postGetSubTodo = (req, res, next) => {
 };
 
 exports.putTodo = (req, res, next) => {
+    logger.warn('putTodo called')
     const { todoId, changeObj } = req.body;
     let parsedChangeObj = null;
     try {
@@ -72,7 +76,7 @@ exports.putTodo = (req, res, next) => {
 }
 
 exports.putSubTodo = (req, res, next) => {
-    console.error(req.body)
+    logger.warn('putSubTodo called')
     const { todoId, changeObj } = req.body;
     const parsedChangeObj = JSON.parse(changeObj);
 
@@ -93,6 +97,7 @@ exports.putSubTodo = (req, res, next) => {
 }
 
 exports.deleteTodo = (req, res, next) => {
+    logger.warn('deleteTodo called')
     const reqTodoId = req.body.todoId
     if (!reqTodoId) {
         return res.json({ errorMsg: "Please provide the Id  to delete Todo ", fieldMissing: true, requiredField: "todoId" })
@@ -116,6 +121,7 @@ exports.deleteTodo = (req, res, next) => {
 };
 
 exports.deleteSubTodo = (req, res, next) => {
+    logger.warn('deleteSubTodo called')
     const subTodoId = req.body.subTodoId;
     const parentTodoId = req.body.parentTodoId;
     const userId = req.userId;
@@ -148,6 +154,7 @@ exports.deleteSubTodo = (req, res, next) => {
 
 
 exports.postTodo = (req, res, next) => {
+    logger.warn('postTodo called')
     const { userId } = req;
     const { title, description } = req.body;
     console.error(req.body)
@@ -184,6 +191,7 @@ exports.postTodo = (req, res, next) => {
 
 
 exports.postSubTodo = (req, res, next) => {
+    logger.warn('postSubTodo called')
     const userId = req.userId
     const { parentId, subTodoTitle, subTodoDescription } = req.body;
     let createdSubTodo = null
