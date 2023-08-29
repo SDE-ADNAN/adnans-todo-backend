@@ -159,12 +159,6 @@ exports.postTodo = (req, res, next) => {
     const { title, description } = req.body;
     console.error(req.body)
     if (title && description) {
-        // const newTodo = new Todo({
-        //     title: title,
-        //     description: description,
-        //     user: new mongoose.Types.ObjectId(userId), // to filter todos as per users
-        //     todo: [],
-        // });
         const newTodo = new Todo({
             user: new mongoose.Types.ObjectId(userId), // to filter todos as per users
             todo: [], ...req.body
