@@ -18,6 +18,34 @@ exports.getAllTodos = (req, res, next) => {
         .catch(err => console.log(err));
 };
 
+exports.getFilteredTodos = async (req, res, next) => {
+    const userId = req.userId;
+    const query = req.query;
+    
+    try {
+        let filter = { user: mongoose.Types.ObjectId(userId) };
+        
+        if (query.status) {
+            filter.status = query.status;
+        }
+        
+        if (query.priority) {
+            filter.priority = query.priority;
+        }
+        
+        if (query.dueDate) {
+            filter.dueDate = { $lte: new Date(query.dueDate) };
+        }
+        
+        const todos = await Todo.find(filter).populate('todo').exec();
+        return res.status(200).json(todos);
+    } catch (err) {
+        console.error('Error fetching filtered todos:', err);
+        return res.status(500).json({ message: 'Failed to fetch filtered todos.' });
+    }
+};
+
+
 exports.postGetTodo = (req, res, next) => {
     logger.warn('postGetTodo called')
     const todoId = req.body.todoId
