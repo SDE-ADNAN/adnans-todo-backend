@@ -32,8 +32,8 @@ app.use(upload.any()); // middleware to handle form-data
 // app.use(bodyParser.json())
 // app.use(express.json())
 
-app.use('/auth', authRoutes);
-app.use('/admin', adminRoutes);
+app.use('/jarvis/auth', authRoutes);
+app.use('/jarvis/admin', adminRoutes);
 
 app.use('/', (req, res, next) => {
   res.send("<h1>Welcome to todo backend </h1>")
