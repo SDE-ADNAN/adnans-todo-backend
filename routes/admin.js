@@ -14,6 +14,7 @@ router.post('/postGetTodo', adminController.postGetTodo);
 router.post('/postGetSubTodo', adminController.postGetSubTodo);
 router.post('/postTodo', adminController.postTodo);
 router.post('/postSubTodo', adminController.postSubTodo);
+router.post('/getFilteredTodos', adminController.getFilteredTodos);
 router.put('/putTodo', adminController.putTodo);
 router.put('/putSubTodo', adminController.putSubTodo);
 router.delete('/deleteTodo', adminController.deleteTodo);

@@ -18,12 +18,13 @@ exports.getAllTodos = (req, res, next) => {
         .catch(err => console.log(err));
 };
 
+// eg url : http://192.168.0.101:3033/admin/getFilteredTodos/?status=InProgress&priority=High&dueDate=2023-09-15 
 exports.getFilteredTodos = async (req, res, next) => {
     const userId = req.userId;
     const query = req.query;
     
     try {
-        let filter = { user: mongoose.Types.ObjectId(userId) };
+        let filter = { user: new mongoose.Types.ObjectId(userId) };
         
         if (query.status) {
             filter.status = query.status;
@@ -42,6 +43,33 @@ exports.getFilteredTodos = async (req, res, next) => {
     } catch (err) {
         console.error('Error fetching filtered todos:', err);
         return res.status(500).json({ message: 'Failed to fetch filtered todos.' });
+    }
+};
+
+exports.modifyTodo = async (req, res, next) => {
+    const userId = req.userId;
+    const { todoId, changeObj } = req.body;
+    
+    try {
+        const todo = await Todo.findOne({ _id: todoId, user: userId });
+        
+        if (!todo) {
+            return res.status(404).json({ message: 'Todo not found.' });
+        }
+        
+        const parsedChangeObj = JSON.parse(changeObj);
+        Object.keys(parsedChangeObj).forEach(key => {
+            // Update only the fields that are allowed to be modified
+            if (['status', 'priority', 'dueDate', 'tags', 'attachments', 'notes', 'recurring', 'estimatedTime', 'actualTimeSpent'].includes(key)) {
+                todo[key] = parsedChangeObj[key];
+            }
+        });
+        
+        const updatedTodo = await todo.save();
+        return res.status(200).json(updatedTodo);
+    } catch (err) {
+        console.error('Error modifying todo:', err);
+        return res.status(500).json({ message: 'Failed to modify todo.' });
     }
 };
 
