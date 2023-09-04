@@ -45,9 +45,9 @@ exports.loginUser = async (req, res, next) => {
     const { userName, password } = req.body;
 
     const user = await User.findOne({ userName })
-            if (!user) {
-                return res.status(404).json({ message: 'User Not Found. ' });
-            }
+    if (!user) {
+        return res.status(404).json({ message: 'User Not Found. ' });
+    }
 
     const passwordsMatch = await bcrypt.compare(password, user.password);
     console.log(passwordsMatch)
@@ -56,7 +56,7 @@ exports.loginUser = async (req, res, next) => {
         return res.status(401).json({ message: 'Invalid Credentials. ' });
     } else {
         const token = jwt.sign({ userId: user._id }, process.env.SECRET);
-                return res.status(200).json({ message: 'Login successful. ', token });
+        return res.status(200).json({ message: 'Login successful. ', token });
     }
 };
 
@@ -78,7 +78,43 @@ exports.getUserProfile = (req, res) => {
             if (!user) {
                 return res.status(404).json({ message: 'User not Found' });
             }
-            return res.status(200).json({ user });
+
+            const filteredTodos = user.todos.filter(todo => {
+                return todo.status === 'Todo';
+            });
+            const filteredInProgress = user.todos.filter(todo => {
+                return todo.status === 'InProgress';
+            });
+            const filteredCompleted = user.todos.filter(todo => {
+                return todo.status === 'Completed';
+            });
+            const filteredOnHold = user.todos.filter(todo => {
+                return todo.status === 'OnHold';
+            });
+            const filteredHigh = user.todos.filter(todo => {
+                return todo.priority === 'High';
+            });
+            const filteredMedium = user.todos.filter(todo => {
+                return todo.priority === 'Medium';
+            });
+            const filteredLow = user.todos.filter(todo => {
+                return todo.priority === 'Low';
+            });
+            const userObj = {
+                ...user.toObject(),
+                statusFiltered: {
+                    __filteredTodos: filteredTodos,
+                    __filteredInProgress: filteredInProgress,
+                    __filteredCompleted: filteredCompleted,
+                    __filteredOnHold: filteredOnHold
+                },
+                priorityFiltered: {
+                    __filteredHigh: filteredHigh,
+                    __filteredMedium: filteredMedium,
+                    __filteredLow: filteredLow
+                }
+            };
+            return res.status(200).json({ user: userObj });
         })
         .catch((err) => {
             console.error('Error fetching user profile: ', err);
