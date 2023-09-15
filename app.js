@@ -53,5 +53,5 @@ mongoose
 
 var host = Object.values(require('os').networkInterfaces()).reduce((r, list) => r.concat(list.reduce((rr, i) => rr.concat(i.family === 'IPv4' && !i.internal && i.address || []), [])), [])
 
-logger.info("your localhost is : http://localhost:" + process.env.PORT);
-logger.info("for access on other devices (on same network) : http://" + host + ":" + process.env.PORT + "/");
+logger.info("your localhost is : http://localhost:" + process.env.PORT+'/jarvis');
+logger.info("for access on other devices (on same network) : http://" + host + ":" + process.env.PORT + "/jarvis");
