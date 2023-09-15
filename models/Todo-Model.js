@@ -24,6 +24,21 @@ const todoSchema = new mongoose.Schema({
         enum: ['Todo', 'InProgress', 'Completed', 'OnHold'],
         default: 'Todo',
     },
+    possibleStatus: {
+        type: Object,
+        default:{
+        Todo:'#ffe100ae', 
+        InProgress:'#0080ff', 
+        Completed:'#55c23b',
+        OnHold:'#ca7235'}
+    },
+    possiblePriority: {
+        type: Object,
+        default:{
+        High:'#ffe100ae', 
+        Medium:'#0080ff', 
+        Low:'#55c23b'}
+    },
     priority: {
         type: String,
         enum: ['High', 'Medium', 'Low'],
