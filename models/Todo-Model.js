@@ -27,17 +27,17 @@ const todoSchema = new mongoose.Schema({
     possibleStatus: {
         type: Object,
         default:{
-        Todo:'#ffe100ae', 
-        InProgress:'#0080ff', 
-        Completed:'#55c23b',
-        OnHold:'#ca7235'}
+        Todo:'#fde74c', 
+        InProgress:'#41a0ff', 
+        Completed:'#74ff53',
+        OnHold:'#adadad'}
     },
     possiblePriority: {
         type: Object,
         default:{
-        High:'#ffe100ae', 
-        Medium:'#0080ff', 
-        Low:'#55c23b'}
+        High:'#fd6d4c', 
+        Medium:'#fde74c', 
+        Low:'#74ff53'}
     },
     priority: {
         type: String,
