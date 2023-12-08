@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "nodejs / express backend app for my todo-list app on github",
   "engines": {
-    "node": "14.20.1"
+    "node": "18.16.0"
   },
   "main": "./dist/app.js",
   "scripts": {
