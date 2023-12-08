@@ -10,7 +10,7 @@ const router = express_1.default.Router();
 // for registering a new User {{ WORKING FINE }}
 router.post('/register', auth_1.registerUser);
 // Login user and issue JWT token {{ WORKING FINE }}
-router.post('/login', auth_1.registerUser);
+router.post('/login', auth_1.loginUser);
 router.post('/resetPassword', auth_1.resetPassword);
 router.post('/forgotPassword', auth_1.forgotPassword);
 // need to place it right to use the below protected routes and set userId in req object

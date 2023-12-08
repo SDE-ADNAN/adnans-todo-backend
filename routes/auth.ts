@@ -1,6 +1,6 @@
 import  path from 'path';
 import  express from 'express';
-import  {registerUser, resetPassword, forgotPassword, getUserProfile , updateUserProfile,deleteUser} from '../controllers/auth';
+import  {registerUser, resetPassword, forgotPassword, getUserProfile , updateUserProfile,deleteUser, loginUser} from '../controllers/auth';
 import  authenticateUser from '../middlewares/authMiddleware';
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/register', registerUser);
 
 // Login user and issue JWT token {{ WORKING FINE }}
-router.post('/login', registerUser);
+router.post('/login', loginUser);
 
 router.post('/resetPassword', resetPassword)
 
