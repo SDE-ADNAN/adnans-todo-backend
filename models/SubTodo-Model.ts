@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const subTodoSchema = new mongoose.Schema({
     title: {
@@ -13,4 +13,4 @@ const subTodoSchema = new mongoose.Schema({
     },
 }, { timestamps: true })
 
-module.exports = mongoose.model('SubTodo', subTodoSchema)
+export default mongoose.model('SubTodo', subTodoSchema)

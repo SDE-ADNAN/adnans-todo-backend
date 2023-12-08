@@ -1,6 +1,6 @@
-const { createLogger, format, transports } = require('winston');
+import { createLogger, format, transports } from 'winston';
+import colors from "colors"
 const { combine, timestamp, colorize, printf } = format;
-const colors = require("colors")
 
 const levels = {
   error: 0, // red
@@ -51,5 +51,4 @@ const Logger = () => {
     ],
   });
 }
-
-module.exports = Logger
+export default Logger;
