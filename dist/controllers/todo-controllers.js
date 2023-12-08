@@ -15,11 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.postSubTodo = exports.postTodo = exports.deleteSubTodo = exports.deleteTodo = exports.putSubTodo = exports.putTodo = exports.postGetSubTodo = exports.postGetTodo = exports.modifyTodo = exports.getFilteredTodos = exports.getAllTodos = void 0;
 const Todo_Model_1 = __importDefault(require("../models/Todo-Model"));
 const SubTodo_Model_1 = __importDefault(require("../models/SubTodo-Model"));
-const index_1 = __importDefault(require("../logger/index"));
+// import  logger from '../logger/index';
 const User_Model_1 = __importDefault(require("../models/User-Model"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const getAllTodos = (req, res, next) => {
-    index_1.default.warn('getAllTodos called');
+    console.log('getAllTodos called');
     const userId = req.headers["userId"];
     Todo_Model_1.default.find({ user: userId })
         .populate('todo')
@@ -36,18 +36,20 @@ const getFilteredTodos = (req, res, next) => __awaiter(void 0, void 0, void 0, f
     const userId = req.headers["userId"];
     const query = req.query;
     try {
-        let filter = { user: new mongoose_1.default.Types.ObjectId(userId.toString()) };
-        if (query.status) {
-            filter.status = query.status;
+        if (userId) {
+            let filter = { user: new mongoose_1.default.Types.ObjectId(userId.toString()) };
+            if (query.status) {
+                filter.status = query.status;
+            }
+            if (query.priority) {
+                filter.priority = query.priority;
+            }
+            if (query.dueDate) {
+                filter.dueDate = { $lte: new Date(query.dueDate) };
+            }
+            const todos = yield Todo_Model_1.default.find(filter).populate('todo').exec();
+            return res.status(200).json(todos);
         }
-        if (query.priority) {
-            filter.priority = query.priority;
-        }
-        if (query.dueDate) {
-            filter.dueDate = { $lte: new Date(query.dueDate) };
-        }
-        const todos = yield Todo_Model_1.default.find(filter).populate('todo').exec();
-        return res.status(200).json(todos);
     }
     catch (err) {
         console.error('Error fetching filtered todos:', err);
@@ -80,7 +82,7 @@ const modifyTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.modifyTodo = modifyTodo;
 const postGetTodo = (req, res, next) => {
-    index_1.default.warn('postGetTodo called');
+    console.log('postGetTodo called');
     const todoId = req.body.todoId;
     Todo_Model_1.default.findById(todoId)
         .populate('todo')
@@ -97,7 +99,7 @@ const postGetTodo = (req, res, next) => {
 };
 exports.postGetTodo = postGetTodo;
 const postGetSubTodo = (req, res, next) => {
-    index_1.default.warn('postGetSubTodo called');
+    console.log('postGetSubTodo called');
     const reqTodoId = req.body.todoId;
     SubTodo_Model_1.default.findById(reqTodoId)
         .then(todo => {
@@ -109,7 +111,7 @@ const postGetSubTodo = (req, res, next) => {
 };
 exports.postGetSubTodo = postGetSubTodo;
 const putTodo = (req, res, next) => {
-    index_1.default.warn('putTodo called');
+    console.log('putTodo called');
     const { todoId, changeObj } = req.body;
     let parsedChangeObj = null;
     try {
@@ -117,7 +119,7 @@ const putTodo = (req, res, next) => {
     }
     catch (err) {
         if (err) {
-            index_1.default.error(err);
+            console.log(err);
             return res.status(500).json({ message: 'changeObj Json is invalid pls stringify it before sending in formData. ' });
         }
     }
@@ -135,7 +137,7 @@ const putTodo = (req, res, next) => {
 };
 exports.putTodo = putTodo;
 const putSubTodo = (req, res, next) => {
-    index_1.default.warn('putSubTodo called');
+    console.log('putSubTodo called');
     const { todoId, changeObj } = req.body;
     const parsedChangeObj = JSON.parse(changeObj);
     SubTodo_Model_1.default.findByIdAndUpdate(todoId, { $set: parsedChangeObj }, { new: true } // Return the updated document after the update
@@ -152,7 +154,7 @@ const putSubTodo = (req, res, next) => {
 };
 exports.putSubTodo = putSubTodo;
 const deleteTodo = (req, res, next) => {
-    index_1.default.warn('deleteTodo called');
+    console.log('deleteTodo called');
     const reqTodoId = req.body.todoId;
     const userId = req.headers["userId"];
     if (!reqTodoId) {
@@ -174,7 +176,7 @@ const deleteTodo = (req, res, next) => {
 };
 exports.deleteTodo = deleteTodo;
 const deleteSubTodo = (req, res, next) => {
-    index_1.default.warn('deleteSubTodo called');
+    console.log('deleteSubTodo called');
     const subTodoId = req.body.subTodoId;
     const parentTodoId = req.body.parentTodoId;
     const userId = req.headers["userId"];
@@ -211,7 +213,7 @@ const deleteSubTodo = (req, res, next) => {
 };
 exports.deleteSubTodo = deleteSubTodo;
 const postTodo = (req, res, next) => {
-    index_1.default.warn('postTodo called');
+    console.log('postTodo called');
     const userId = req.headers["userId"];
     const { title, description } = req.body;
     console.error(req.body);
@@ -234,17 +236,17 @@ const postTodo = (req, res, next) => {
 };
 exports.postTodo = postTodo;
 const postSubTodo = (req, res, next) => {
-    index_1.default.warn('postSubTodo called');
+    console.log('postSubTodo called');
     const userId = req.headers["userId"];
     const { parentId, subTodoTitle, subTodoDescription } = req.body;
-    let createdSubTodo = null;
+    let createdSubTodo;
     Todo_Model_1.default.findById(parentId)
         .then((parentTodo) => {
         console.log(parentTodo);
         if (!parentTodo) {
             return res.status(404).json({ message: 'Parent todo not found.' });
         }
-        else {
+        else if (userId) {
             const newSubTodo = new SubTodo_Model_1.default({
                 title: subTodoTitle,
                 description: subTodoDescription,
@@ -252,7 +254,7 @@ const postSubTodo = (req, res, next) => {
             });
             return newSubTodo.save().then((savedSubTodo) => {
                 if (savedSubTodo) {
-                    createdSubTodo = savedSubTodo;
+                    createdSubTodo = savedSubTodo.toObject();
                     return Todo_Model_1.default.findByIdAndUpdate(parentId, { $push: { todo: savedSubTodo._id } }).then((updatedParentTodo) => {
                         if (updatedParentTodo) {
                             console.log('Sub-todo added to the parent todo:', updatedParentTodo);

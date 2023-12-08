@@ -1,6 +1,9 @@
-import { createLogger, format, transports } from 'winston';
+import {Logger, createLogger, format, transports } from 'winston';
 import colors from "colors"
-const { combine, timestamp, colorize, printf } = format;
+import { TransformableInfo } from 'logform';
+import { format as winstonFormat } from 'winston';
+
+const { combine, timestamp, colorize, printf } = winstonFormat;
 
 const levels = {
   error: 0, // red
@@ -12,7 +15,8 @@ const levels = {
   silly: 6
 };
 
-const myFormat = printf(({ level, message, /*label*/ timestamp }) => {
+const myFormat = (info: TransformableInfo) => {
+  const { level, message, timestamp } = info;
   if (level === "error") {
     return `${colors.red.bgRed(`[ ${timestamp} ]`)} ${colors.bold.red(`[ level ${level} ]`)} : [ ${colors.red(`${message}`)}]`;
   }
@@ -22,33 +26,38 @@ const myFormat = printf(({ level, message, /*label*/ timestamp }) => {
   if (level === "info") {
     return `${colors.bgWhite(`[ ${timestamp} ]`)} ${colors.bold.white(`[ level ${level} ]`)} : [ ${colors.white(`${message}`)} ]`;
   }
-});
+  return '';
+};
 
-const Logger = () => {
-  //   var getLabel = function (callingModule) {
-  //     var parts = callingModule.filename.split('/');
-  //     return parts[parts.length - 2] + '/' + parts.pop();
-  // };
-  return createLogger({
-    level: 'info',
-    format: combine(
-      // label(getLabel),
-      timestamp({ format: "DD-MM-YYYY HH:mm:ss" }),
-      myFormat,
-      colorize(),
-    ),
-    // defaultMeta: { service: 'user-service' },
-    transports: [
-      //
-      // - Write all logs with importance level of `error` or less to `error.log`
-      // - Write all logs with importance level of `info` or less to `combined.log`
-      //
-      new transports.File({ filename: 'error.log', level: 'error' }),
-      new transports.File({ filename: 'warn.log', level: 'warn' }),
-      new transports.File({ filename: 'debug.log', level: 'debug' }),
-      new transports.File({ filename: 'combined.log' }),
-      new transports.Console(),
-    ],
-  });
-}
-export default Logger;
+const LoggerInIt: Logger = createLogger({
+  level: 'info',
+  format: combine(
+    timestamp({ format: "DD-MM-YYYY HH:mm:ss" }),
+    printf(myFormat),
+    colorize(),
+  ),
+  transports: [
+    new transports.File({ filename: 'error.log', level: 'error' }),
+    new transports.File({ filename: 'warn.log', level: 'warn' }),
+    new transports.File({ filename: 'debug.log', level: 'debug' }),
+    new transports.File({ filename: 'combined.log' }),
+    new transports.Console(),
+  ],
+});
+  // return createLogger({
+  //   level: 'info',
+  //   format: combine(
+  //     timestamp({ format: "DD-MM-YYYY HH:mm:ss" }),
+  //     printf(myFormat),
+  //     colorize(),
+  //   ),
+  //   transports: [
+  //     new transports.File({ filename: 'error.log', level: 'error' }),
+  //     new transports.File({ filename: 'warn.log', level: 'warn' }),
+  //     new transports.File({ filename: 'debug.log', level: 'debug' }),
+  //     new transports.File({ filename: 'combined.log' }),
+  //     new transports.Console(),
+  //   ],
+  // });
+// }
+export default LoggerInIt;

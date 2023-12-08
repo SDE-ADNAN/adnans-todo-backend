@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import  bcrypt from "bcrypt";
+import mongoose, { CallbackError } from 'mongoose';
+import bcrypt from "bcrypt";
 import TodoItem from '../Types/TodoTypesInterfaces';
 
 // Define the interface representing the user document
@@ -77,8 +77,9 @@ userSchema.pre<IUser>('save', async function (next) {
     const hash = await bcrypt.hash(this.password, saltRounds);
     this.password = hash;
     next();
-  } catch (error) {
-    next(error);
+  } catch (error ) {
+    const errorF = error as CallbackError
+    next(errorF);
   }
 });
 

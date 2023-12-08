@@ -1,3 +1,9 @@
-const path = require('path');
+import path from 'path';
 
-module.exports = path.dirname(require.main.filename);
+
+const mainModule = require.main;
+const mainFilename = mainModule ? mainModule.filename : '';
+const dirname = path.dirname(mainFilename);
+
+export default dirname;
+// module.exports = path.dirname(require.main.filename);

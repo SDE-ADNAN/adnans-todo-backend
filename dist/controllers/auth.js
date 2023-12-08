@@ -13,15 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetPassword = exports.forgotPassword = exports.deleteUser = exports.updateUserProfile = exports.getUserProfile = exports.loginUser = exports.registerUser = void 0;
-const index_js_1 = __importDefault(require("../logger/index.js"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const User_Model_js_1 = __importDefault(require("../models/User-Model.js"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const otp_generator_1 = __importDefault(require("otp-generator"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
+// import logger from '../logger/index.js';
 // registering user
 const registerUser = (req, res, next) => {
-    index_js_1.default.warn('registerUser called');
+    console.log('registerUser called');
     const { userName, password, email, picUrl } = req.body;
     User_Model_js_1.default.findOne({ $or: [{ userName }, { email }] })
         .then((existingUser) => {
@@ -61,7 +61,7 @@ const registerUser = (req, res, next) => {
 exports.registerUser = registerUser;
 // Logging in the user and issuing jwt token
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    index_js_1.default.warn('loginUser called');
+    console.log('loginUser called');
     const { userName, password } = req.body;
     const user = yield User_Model_js_1.default.findOne({ userName });
     if (!user) {
@@ -73,14 +73,14 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         return res.status(401).json({ message: 'Invalid Credentials. ' });
     }
     else {
-        const token = jsonwebtoken_1.default.sign({ userId: user._id }, process.env.SECRET);
+        const token = jsonwebtoken_1.default.sign({ userId: user._id }, process.env.SECRET || "");
         return res.status(200).json({ message: 'Login successful. ', token });
     }
 });
 exports.loginUser = loginUser;
 // Get user Profile (requires authentication)
 const getUserProfile = (req, res) => {
-    index_js_1.default.warn('getUserProfile called');
+    console.log('getUserProfile called');
     const userId = req.headers["userId"];
     User_Model_js_1.default.findById(userId)
         .populate({
@@ -143,7 +143,7 @@ const getUserProfile = (req, res) => {
 exports.getUserProfile = getUserProfile;
 // Update user profile (requires authentication)
 const updateUserProfile = (req, res) => {
-    index_js_1.default.warn('updateUserProfile called');
+    console.log('updateUserProfile called');
     // The userId is obtained from the authentication middleware (decoded JWT)
     const userId = req.headers["userId"];
     const { userName, email, picUrl } = req.body;
@@ -162,7 +162,7 @@ const updateUserProfile = (req, res) => {
 exports.updateUserProfile = updateUserProfile;
 // Delete user (requires authentication)
 const deleteUser = (req, res) => {
-    index_js_1.default.warn('deleteUser called');
+    console.log('deleteUser called');
     // the userId is obtained from the authentication middleware (decoded JWT)
     const userId = req.headers["userId"];
     if (typeof userId === "string") {
@@ -185,7 +185,7 @@ const deleteUser = (req, res) => {
 exports.deleteUser = deleteUser;
 // Forgot Password Route
 const forgotPassword = (req, res) => {
-    index_js_1.default.warn('forgotPassword called');
+    console.log('forgotPassword called');
     const { email } = req.body;
     User_Model_js_1.default.findOne({ email })
         .then(user => {
@@ -194,7 +194,9 @@ const forgotPassword = (req, res) => {
         }
         sendOTP(email)
             .then(otp => {
-            req.session.storedOtp = otp; // Store OTP in session or a more persistent storage
+            if (req && req.session) {
+                req.session.storedOtp = otp; // Store OTP in session or a more persistent storage
+            }
             return res.status(200).json({ message: 'OTP sent successfully.', storedOtp: otp });
         })
             .catch(err => {
@@ -209,7 +211,7 @@ const forgotPassword = (req, res) => {
 };
 exports.forgotPassword = forgotPassword;
 const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    index_js_1.default.warn('resetPassword called');
+    console.log('resetPassword called');
     const { email, otp, newPassword } = req.body;
     try {
         if (otp !== req.session.storedOtp) {
@@ -233,9 +235,9 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.resetPassword = resetPassword;
 // Generate and send OTP
 const sendOTP = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    index_js_1.default.warn('sendOTP called');
+    console.log('sendOTP called');
     const otp = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
-    index_js_1.default.error(process.env.NODEMAILER_EMAIL);
+    console.warn(process.env.NODEMAILER_EMAIL);
     let config = {
         service: 'gmail',
         port: 465,

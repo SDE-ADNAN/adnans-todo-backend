@@ -70,7 +70,8 @@ userSchema.pre('save', function (next) {
             next();
         }
         catch (error) {
-            next(error);
+            const errorF = error;
+            next(errorF);
         }
     });
 });

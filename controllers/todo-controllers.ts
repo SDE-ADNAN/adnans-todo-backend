@@ -1,14 +1,15 @@
 import  Todo from "../models/Todo-Model";
 import  subTodo from "../models/SubTodo-Model";
 import  colors from 'colors';
-import  logger from '../logger/index';
+// import  logger from '../logger/index';
 import  User from "../models/User-Model";
 import  mongoose from 'mongoose';
 import { NextFunction, Request, Response } from "express";
+import TodoItem from "../Types/TodoTypesInterfaces";
 
 
 export const getAllTodos = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('getAllTodos called')
+    console.log('getAllTodos called')
     const userId = req.headers["userId"];
     Todo.find({ user: userId })
         .populate('todo')
@@ -26,22 +27,20 @@ export const getFilteredTodos = async (req:Request, res:Response, next:NextFunct
     const query = req.query;
 
     try {
-        let filter: { user: mongoose.Types.ObjectId, status?: string, priority?: string, dueDate?: { $lte: Date } } = { user: new mongoose.Types.ObjectId(userId.toString()) };
-
+        if(userId){
+            let filter: { user: mongoose.Types.ObjectId, status?: string, priority?: string, dueDate?: { $lte: Date } } = { user: new mongoose.Types.ObjectId(userId.toString()) };
         if (query.status) {
             filter.status = query.status as string;
         }
-
         if (query.priority) {
             filter.priority = query.priority as string;
         }
-
         if (query.dueDate) {
             filter.dueDate = { $lte: new Date(query.dueDate as string) };
         }
-
         const todos = await Todo.find(filter).populate('todo').exec();
         return res.status(200).json(todos);
+        }
     } catch (err) {
         console.error('Error fetching filtered todos:', err);
         return res.status(500).json({ message: 'Failed to fetch filtered todos.' });
@@ -54,19 +53,19 @@ export const modifyTodo = async (req:Request, res:Response, next:NextFunction) =
     
     try {
         const todo = await Todo.findOne({ _id: todoId, user: userId });
-        
+
         if (!todo) {
             return res.status(404).json({ message: 'Todo not found.' });
         }
-        
+
         const parsedChangeObj = JSON.parse(changeObj);
         Object.keys(parsedChangeObj).forEach(key => {
             // Update only the fields that are allowed to be modified
             if (['status', 'priority', 'dueDate', 'tags', 'attachments', 'notes', 'recurring', 'estimatedTime', 'actualTimeSpent'].includes(key)) {
-                todo[key] = parsedChangeObj[key];
+                (todo as any)[key] = parsedChangeObj[key];
             }
         });
-        
+
         const updatedTodo = await todo.save();
         return res.status(200).json(updatedTodo);
     } catch (err) {
@@ -77,7 +76,7 @@ export const modifyTodo = async (req:Request, res:Response, next:NextFunction) =
 
 
 export const postGetTodo = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('postGetTodo called')
+    console.log('postGetTodo called')
     const todoId = req.body.todoId
     Todo.findById(todoId)
         .populate('todo')
@@ -93,7 +92,7 @@ export const postGetTodo = (req:Request, res:Response, next:NextFunction) => {
 };
 
 export const postGetSubTodo = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('postGetSubTodo called')
+    console.log('postGetSubTodo called')
     const reqTodoId = req.body.todoId
     subTodo.findById(reqTodoId)
         .then(todo => {
@@ -105,14 +104,14 @@ export const postGetSubTodo = (req:Request, res:Response, next:NextFunction) => 
 };
 
 export const putTodo = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('putTodo called')
+    console.log('putTodo called')
     const { todoId, changeObj } = req.body;
     let parsedChangeObj = null;
     try {
         parsedChangeObj = JSON.parse(changeObj);
     } catch (err) {
         if (err) {
-            logger.error(err)
+            console.log(err)
             return res.status(500).json({ message: 'changeObj Json is invalid pls stringify it before sending in formData. ' })
         }
     }
@@ -134,7 +133,7 @@ export const putTodo = (req:Request, res:Response, next:NextFunction) => {
 }
 
 export const putSubTodo = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('putSubTodo called')
+    console.log('putSubTodo called')
     const { todoId, changeObj } = req.body;
     const parsedChangeObj = JSON.parse(changeObj);
 
@@ -155,7 +154,7 @@ export const putSubTodo = (req:Request, res:Response, next:NextFunction) => {
 }
 
 export const deleteTodo = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('deleteTodo called')
+    console.log('deleteTodo called')
     const reqTodoId = req.body.todoId
     const userId = req.headers["userId"];
     if (!reqTodoId) {
@@ -180,7 +179,7 @@ export const deleteTodo = (req:Request, res:Response, next:NextFunction) => {
 };
 
 export const deleteSubTodo = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('deleteSubTodo called')
+    console.log('deleteSubTodo called')
     const subTodoId = req.body.subTodoId;
     const parentTodoId = req.body.parentTodoId;
     const userId = req.headers["userId"];
@@ -227,7 +226,7 @@ export const deleteSubTodo = (req:Request, res:Response, next:NextFunction) => {
 
 
 export const postTodo = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('postTodo called')
+    console.log('postTodo called')
     const userId = req.headers["userId"];
     const { title, description } = req.body;
     console.error(req.body)
@@ -259,16 +258,16 @@ export const postTodo = (req:Request, res:Response, next:NextFunction) => {
 
 
 export const postSubTodo = (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('postSubTodo called')
+    console.log('postSubTodo called')
     const userId = req.headers["userId"];
     const { parentId, subTodoTitle, subTodoDescription } = req.body;
-    let createdSubTodo = null
+    let createdSubTodo:TodoItem
     Todo.findById(parentId)
         .then((parentTodo) => {
             console.log(parentTodo)
             if (!parentTodo) {
                 return res.status(404).json({ message: 'Parent todo not found.' });
-            } else {
+            } else if(userId){
                 const newSubTodo = new subTodo({
                     title: subTodoTitle,
                     description: subTodoDescription,
@@ -276,7 +275,7 @@ export const postSubTodo = (req:Request, res:Response, next:NextFunction) => {
                 });
                 return newSubTodo.save().then((savedSubTodo) => {
                     if (savedSubTodo) {
-                        createdSubTodo = savedSubTodo;
+                        createdSubTodo = savedSubTodo.toObject() as TodoItem;
                         return Todo.findByIdAndUpdate(parentId, { $push: { todo: savedSubTodo._id } }).then((updatedParentTodo) => {
                             if (updatedParentTodo) {
                                 console.log('Sub-todo added to the parent todo:', updatedParentTodo);

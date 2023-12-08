@@ -15,7 +15,7 @@ const os_1 = __importDefault(require("os"));
 const networkInterfaces = os_1.default.networkInterfaces();
 const hostAddresses = [];
 // project imports
-const index_1 = __importDefault(require("./logger/index"));
+// import logger from "./logger/index"
 const admin_1 = __importDefault(require("./routes/admin"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const app = (0, express_1.default)();
@@ -39,21 +39,23 @@ app.use('/', (req, res, next) => {
     res.send("<h1>Welcome to todo backend </h1>");
 });
 mongoose_1.default
-    .connect(process.env.MONGO_CONNECT_URL)
+    .connect(process.env.MONGO_CONNECT_URL || '')
     .then(result => {
     app.listen(process.env.PORT, "0.0.0.0");
-    index_1.default.warn("////////////// MONGODB CONNECTED //////////////");
+    const logger = require("./logger/index"); // Add this line to explicitly declare the type of logger
+    logger.warn("////////////// MONGODB CONNECTED //////////////");
 })
     .catch(err => {
     console.log(err);
 });
 // var host = Object.values(require('os').networkInterfaces()).reduce((r:string, list) => r.concat(list.reduce((rr:string, i) => rr.concat(i.family === 'IPv4' && !i.internal && i.address || []), [])), [])
 Object.values(networkInterfaces).forEach((interfaces) => {
-    interfaces.forEach((iface) => {
-        if (iface.family === 'IPv4' && !iface.internal) {
-            hostAddresses.push(iface.address);
-        }
-    });
+    if (interfaces)
+        interfaces.forEach((iface) => {
+            if (iface.family === 'IPv4' && !iface.internal) {
+                hostAddresses.push(iface.address);
+            }
+        });
 });
-index_1.default.info("your localhost is : http://localhost:" + process.env.PORT + '/jarvis');
-index_1.default.info("for access on other devices (on same network) : http://" + hostAddresses[0] + ":" + process.env.PORT + "/jarvis");
+console.log("your localhost is : http://localhost:" + process.env.PORT + '/jarvis');
+console.log("for access on other devices (on same network) : http://" + hostAddresses[0] + ":" + process.env.PORT + "/jarvis");

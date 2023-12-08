@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { Secret } from 'jsonwebtoken';
 
 interface DecodedToken {
     userId: string; // Change the type according to your actual decoded token structure
@@ -12,7 +12,7 @@ const authenticateUser = (req:Request, res:Response, next:NextFunction) => {
             return res.status(401).json({ message: 'Authentication token missing.' });
         }
 
-        const decoded = jwt.verify(token, process.env.SECRET) as DecodedToken;
+        const decoded = jwt.verify(token, process.env.SECRET as Secret) as DecodedToken;
         
         req.headers["userId"] = decoded.userId;
         next()

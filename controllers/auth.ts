@@ -1,4 +1,3 @@
-import logger from '../logger/index.js';
 import bcrypt from 'bcrypt';
 import User from '../models/User-Model.js';
 import jwt from 'jsonwebtoken';
@@ -6,10 +5,11 @@ import otpGenerator from 'otp-generator';
 import nodemailer from 'nodemailer';
 import { NextFunction, Request, Response } from 'express';
 import TodoItem from '../Types/TodoTypesInterfaces.js';
+// import logger from '../logger/index.js';
 
 // registering user
 export const registerUser = (req: Request, res: Response, next: NextFunction) => {
-    logger.warn('registerUser called');
+    console.log('registerUser called');
     const { userName, password, email, picUrl } = req.body;
 
     User.findOne({ $or: [{ userName }, { email }] })
@@ -50,7 +50,7 @@ export const registerUser = (req: Request, res: Response, next: NextFunction) =>
 
 // Logging in the user and issuing jwt token
 export const loginUser = async (req:Request, res:Response, next:NextFunction) => {
-    logger.warn('loginUser called')
+    console.log('loginUser called')
     const { userName, password } = req.body;
 
     const user = await User.findOne({ userName })
@@ -64,14 +64,14 @@ export const loginUser = async (req:Request, res:Response, next:NextFunction) =>
     if (!passwordsMatch) {
         return res.status(401).json({ message: 'Invalid Credentials. ' });
     } else {
-        const token = jwt.sign({ userId: user._id }, process.env.SECRET);
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET||"");
         return res.status(200).json({ message: 'Login successful. ', token });
     }
 };
 
 // Get user Profile (requires authentication)
 export const getUserProfile = (req:Request, res:Response,) => {
-    logger.warn('getUserProfile called')
+    console.log('getUserProfile called')
     const userId  = req.headers["userId"];
 
     User.findById(userId)
@@ -140,7 +140,7 @@ export const getUserProfile = (req:Request, res:Response,) => {
 
 // Update user profile (requires authentication)
 export const updateUserProfile = (req:Request, res:Response,) => {
-    logger.warn('updateUserProfile called')
+    console.log('updateUserProfile called')
     // The userId is obtained from the authentication middleware (decoded JWT)
 
     const userId  = req.headers["userId"];
@@ -166,7 +166,7 @@ export const updateUserProfile = (req:Request, res:Response,) => {
 
 // Delete user (requires authentication)
 export const deleteUser = (req:Request, res:Response,) => {
-    logger.warn('deleteUser called')
+    console.log('deleteUser called')
     // the userId is obtained from the authentication middleware (decoded JWT)
     const userId = req.headers["userId"];
     if (typeof userId === "string"){
@@ -190,7 +190,7 @@ export const deleteUser = (req:Request, res:Response,) => {
 
 // Forgot Password Route
 export const forgotPassword = (req:Request, res:Response,) => {
-    logger.warn('forgotPassword called')
+    console.log('forgotPassword called')
     const { email } = req.body;
 
     User.findOne({ email })
@@ -200,7 +200,9 @@ export const forgotPassword = (req:Request, res:Response,) => {
             }
             sendOTP(email)
                 .then(otp => {
-                    req.session.storedOtp = otp; // Store OTP in session or a more persistent storage
+                    if (req && req.session) {
+                        req.session.storedOtp = otp; // Store OTP in session or a more persistent storage
+                    }
                     return res.status(200).json({ message: 'OTP sent successfully.', storedOtp: otp });
                 })
                 .catch(err => {
@@ -215,11 +217,11 @@ export const forgotPassword = (req:Request, res:Response,) => {
 };
 
 export const resetPassword = async (req:Request, res:Response,) => {
-    logger.warn('resetPassword called')
+    console.log('resetPassword called')
     const { email, otp, newPassword } = req.body;
 
     try {
-        if (otp !== req.session.storedOtp) {
+        if (otp !== (req.session as any).storedOtp) {
             return res.status(401).json({ message: 'Invalid OTP. ' });
         }
 
@@ -232,7 +234,7 @@ export const resetPassword = async (req:Request, res:Response,) => {
         await user.save();
 
         // Clear the stored OTP after successful password reset
-        req.session.storedOtp = null;
+        (req.session as any).storedOtp = null;
 
         return res.status(200).json({ message: 'Password reset successful.' });
     } catch (err) {
@@ -242,11 +244,11 @@ export const resetPassword = async (req:Request, res:Response,) => {
 };
 
 // Generate and send OTP
-const sendOTP = async (email) => {
-    logger.warn('sendOTP called')
+const sendOTP = async (email:string) => {
+    console.log('sendOTP called')
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
 
-    logger.error(process.env.NODEMAILER_EMAIL);
+    console.warn(process.env.NODEMAILER_EMAIL);
 
     let config = {
         service: 'gmail',
