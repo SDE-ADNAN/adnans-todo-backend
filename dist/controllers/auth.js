@@ -18,7 +18,6 @@ const User_Model_js_1 = __importDefault(require("../models/User-Model.js"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const otp_generator_1 = __importDefault(require("otp-generator"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
-// import logger from '../logger/index.js';
 // registering user
 const registerUser = (req, res, next) => {
     console.log('registerUser called');

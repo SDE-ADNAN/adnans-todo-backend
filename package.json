@@ -8,8 +8,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node app.js",
-    "dev": "NODE_ENV=development nodemon app.js"
+    "start": "NODE_ENV=production node ./dist/app.js",
+    "dev": "NODE_ENV=development nodemon ./dist/app.js"
   },
   "repository": {
     "type": "git",

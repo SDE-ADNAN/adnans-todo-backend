@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.postSubTodo = exports.postTodo = exports.deleteSubTodo = exports.deleteTodo = exports.putSubTodo = exports.putTodo = exports.postGetSubTodo = exports.postGetTodo = exports.modifyTodo = exports.getFilteredTodos = exports.getAllTodos = void 0;
 const Todo_Model_1 = __importDefault(require("../models/Todo-Model"));
 const SubTodo_Model_1 = __importDefault(require("../models/SubTodo-Model"));
-// import  logger from '../logger/index';
 const User_Model_1 = __importDefault(require("../models/User-Model"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const getAllTodos = (req, res, next) => {

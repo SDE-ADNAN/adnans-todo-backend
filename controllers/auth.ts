@@ -5,7 +5,6 @@ import otpGenerator from 'otp-generator';
 import nodemailer from 'nodemailer';
 import { NextFunction, Request, Response } from 'express';
 import TodoItem from '../Types/TodoTypesInterfaces.js';
-// import logger from '../logger/index.js';
 
 // registering user
 export const registerUser = (req: Request, res: Response, next: NextFunction) => {

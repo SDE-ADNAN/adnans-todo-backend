@@ -12,7 +12,6 @@ const networkInterfaces = os.networkInterfaces();
 const hostAddresses: string[] = [];
 
 // project imports
-// import logger from "./logger/index"
 import adminRoutes from './routes/admin';
 import authRoutes from './routes/auth';
 
@@ -48,8 +47,7 @@ mongoose
   )
   .then(result => {
     app.listen(process.env.PORT, "0.0.0.0" as any);
-    const logger: any = require("./logger/index"); // Add this line to explicitly declare the type of logger
-    logger.warn("////////////// MONGODB CONNECTED //////////////");
+    console.log("////////////// MONGODB CONNECTED //////////////");
   })
   .catch(err => {
     console.log(err);

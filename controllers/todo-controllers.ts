@@ -1,7 +1,6 @@
 import  Todo from "../models/Todo-Model";
 import  subTodo from "../models/SubTodo-Model";
 import  colors from 'colors';
-// import  logger from '../logger/index';
 import  User from "../models/User-Model";
 import  mongoose from 'mongoose';
 import { NextFunction, Request, Response } from "express";

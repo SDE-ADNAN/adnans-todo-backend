@@ -15,7 +15,6 @@ const os_1 = __importDefault(require("os"));
 const networkInterfaces = os_1.default.networkInterfaces();
 const hostAddresses = [];
 // project imports
-// import logger from "./logger/index"
 const admin_1 = __importDefault(require("./routes/admin"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const app = (0, express_1.default)();
@@ -42,8 +41,7 @@ mongoose_1.default
     .connect(process.env.MONGO_CONNECT_URL || '')
     .then(result => {
     app.listen(process.env.PORT, "0.0.0.0");
-    const logger = require("./logger/index"); // Add this line to explicitly declare the type of logger
-    logger.warn("////////////// MONGODB CONNECTED //////////////");
+    console.log("////////////// MONGODB CONNECTED //////////////");
 })
     .catch(err => {
     console.log(err);
