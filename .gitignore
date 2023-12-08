@@ -8,6 +8,7 @@ error.log
 warn.log
 debug.log
 
+package-lock.json
 
 # env files
 .env
