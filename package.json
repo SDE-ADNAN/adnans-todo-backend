@@ -5,7 +5,7 @@
   "engines": {
     "node": "14.20.1"
   },
-  "main": "server.js",
+  "main": "./dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=production node ./dist/app.js",
