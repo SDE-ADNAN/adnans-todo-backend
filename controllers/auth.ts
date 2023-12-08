@@ -1,47 +1,55 @@
-const logger = require('../logger/index')
-const bcrypt = require('bcrypt');
-const User = require('../models/User-Model');
-const jwt = require('jsonwebtoken')
-const otpGenerator = require('otp-generator');
-const nodemailer = require('nodemailer');
-
+import bcrypt from 'bcrypt';
+import User from '../models/User-Model.js';
+import jwt from 'jsonwebtoken';
+import otpGenerator from 'otp-generator';
+import nodemailer from 'nodemailer';
+import { NextFunction, Request, Response } from 'express';
+import TodoItem from '../Types/TodoTypesInterfaces.js';
 
 // registering user
-exports.registerUser = (req, res, next) => {
-    logger.warn('registerUser called')
+export const registerUser = (req: Request, res: Response, next: NextFunction) => {
+    console.log('registerUser called');
     const { userName, password, email, picUrl } = req.body;
 
-    // checking if the user exists
     User.findOne({ $or: [{ userName }, { email }] })
         .then((existingUser) => {
             if (existingUser) {
-                return res.status(409).json({ message: 'Username or email already exists. ' });
+                return res.status(409).json({ message: 'Username or email already exists.' });
             } else {
                 const newUser = new User({
-                    userName: userName,
-                    password: password,
-                    email: email,
-                    picUrl: picUrl,
+                    userName,
+                    password,
+                    email,
+                    picUrl,
                     todos: [] // Initialized an empty array for todos
                 });
 
-                return newUser.save();
+                return newUser.save()
+                    .then((newlyCreatedUser) => {
+                        if (newlyCreatedUser) {
+                            return res.status(201).json({ message: 'User registered successfully.' });
+                        }
+                    })
+                    .catch((err) => {
+                        console.error('Error registering user: ', err);
+                        return res.status(500).json({ message: 'Failed to register user.' });
+                    });
             }
         })
-        .then((newlyCreatedUser) => {
-            if (newlyCreatedUser) {
-                return res.status(201).json({ message: 'User registered successfully. ' });
-            }
-        })
-        .catch((err) => {
-            console.error('Error registering user: ', err);
-            return res.status(500).json({ message: 'Failed to register user. ' });
-        });
+        // .then((newlyCreatedUser) => {
+        //     if (newlyCreatedUser) {
+        //         return res.status(201).json({ message: 'User registered successfully.' });
+        //     }
+        // })
+        // .catch((err) => {
+        //     console.error('Error registering user: ', err);
+        //     return res.status(500).json({ message: 'Failed to register user.' });
+        // });
 };
 
 // Logging in the user and issuing jwt token
-exports.loginUser = async (req, res, next) => {
-    logger.warn('loginUser called')
+export const loginUser = async (req:Request, res:Response, next:NextFunction) => {
+    console.log('loginUser called')
     const { userName, password } = req.body;
 
     const user = await User.findOne({ userName })
@@ -55,15 +63,15 @@ exports.loginUser = async (req, res, next) => {
     if (!passwordsMatch) {
         return res.status(401).json({ message: 'Invalid Credentials. ' });
     } else {
-        const token = jwt.sign({ userId: user._id }, process.env.SECRET);
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET||"");
         return res.status(200).json({ message: 'Login successful. ', token });
     }
 };
 
 // Get user Profile (requires authentication)
-exports.getUserProfile = (req, res) => {
-    logger.warn('getUserProfile called')
-    const { userId } = req;
+export const getUserProfile = (req:Request, res:Response,) => {
+    console.log('getUserProfile called')
+    const userId  = req.headers["userId"];
 
     User.findById(userId)
         .populate({
@@ -80,25 +88,32 @@ exports.getUserProfile = (req, res) => {
             }
 
             const filteredTodos = user.todos.filter(todo => {
-                return todo.status === 'Todo';
+                const todoItem = todo as TodoItem; // Type assertion
+                return todoItem.status === 'Todo';
             });
             const filteredInProgress = user.todos.filter(todo => {
-                return todo.status === 'InProgress';
+                const todoItem = todo as TodoItem; // Type assertion
+                return todoItem.status === 'InProgress';
             });
             const filteredCompleted = user.todos.filter(todo => {
-                return todo.status === 'Completed';
+                const todoItem = todo as TodoItem; // Type assertion
+                return todoItem.status === 'Completed';
             });
             const filteredOnHold = user.todos.filter(todo => {
-                return todo.status === 'OnHold';
+                const todoItem = todo as TodoItem; // Type assertion
+                return todoItem.status === 'OnHold';
             });
             const filteredHigh = user.todos.filter(todo => {
-                return todo.priority === 'High';
+                const todoItem = todo as TodoItem; // Type assertion
+                return todoItem.priority === 'High';
             });
             const filteredMedium = user.todos.filter(todo => {
-                return todo.priority === 'Medium';
+                const todoItem = todo as TodoItem; // Type assertion
+                return todoItem.priority === 'Medium';
             });
             const filteredLow = user.todos.filter(todo => {
-                return todo.priority === 'Low';
+                const todoItem = todo as TodoItem; // Type assertion
+                return todoItem.priority === 'Low';
             });
             const userObj = {
                 ...user.toObject(),
@@ -123,11 +138,11 @@ exports.getUserProfile = (req, res) => {
 };
 
 // Update user profile (requires authentication)
-exports.updateUserProfile = (req, res) => {
-    logger.warn('updateUserProfile called')
+export const updateUserProfile = (req:Request, res:Response,) => {
+    console.log('updateUserProfile called')
     // The userId is obtained from the authentication middleware (decoded JWT)
 
-    const { userId } = req;
+    const userId  = req.headers["userId"];
     const { userName, email, picUrl } = req.body
     User.findByIdAndUpdate(
         userId,
@@ -149,12 +164,12 @@ exports.updateUserProfile = (req, res) => {
 
 
 // Delete user (requires authentication)
-exports.deleteUser = (req, res) => {
-    logger.warn('deleteUser called')
+export const deleteUser = (req:Request, res:Response,) => {
+    console.log('deleteUser called')
     // the userId is obtained from the authentication middleware (decoded JWT)
-    const { userId } = req;
-
-    User.findOneAndDelete(userId)
+    const userId = req.headers["userId"];
+    if (typeof userId === "string"){
+        User.findOneAndDelete({userId})
         .then(deletedUser => {
             if (!deletedUser) {
                 return res.status(404).json({ message: 'User not found.' });
@@ -166,12 +181,15 @@ exports.deleteUser = (req, res) => {
             console.error('Error deleting User: ', err);
             return res.status(500).json({ message: 'Failed to delete User.' })
         })
+    }else{
+        return res.status(404).json({ message: 'User not found.' });
+    }
 }
 
 
 // Forgot Password Route
-exports.forgotPassword = (req, res) => {
-    logger.warn('forgotPassword called')
+export const forgotPassword = (req:Request, res:Response,) => {
+    console.log('forgotPassword called')
     const { email } = req.body;
 
     User.findOne({ email })
@@ -181,7 +199,9 @@ exports.forgotPassword = (req, res) => {
             }
             sendOTP(email)
                 .then(otp => {
-                    req.session.storedOtp = otp; // Store OTP in session or a more persistent storage
+                    if (req && req.session) {
+                        req.session.storedOtp = otp; // Store OTP in session or a more persistent storage
+                    }
                     return res.status(200).json({ message: 'OTP sent successfully.', storedOtp: otp });
                 })
                 .catch(err => {
@@ -195,12 +215,12 @@ exports.forgotPassword = (req, res) => {
         });
 };
 
-exports.resetPassword = async (req, res) => {
-    logger.warn('resetPassword called')
+export const resetPassword = async (req:Request, res:Response,) => {
+    console.log('resetPassword called')
     const { email, otp, newPassword } = req.body;
 
     try {
-        if (otp !== req.session.storedOtp) {
+        if (otp !== (req.session as any).storedOtp) {
             return res.status(401).json({ message: 'Invalid OTP. ' });
         }
 
@@ -213,7 +233,7 @@ exports.resetPassword = async (req, res) => {
         await user.save();
 
         // Clear the stored OTP after successful password reset
-        req.session.storedOtp = null;
+        (req.session as any).storedOtp = null;
 
         return res.status(200).json({ message: 'Password reset successful.' });
     } catch (err) {
@@ -223,11 +243,11 @@ exports.resetPassword = async (req, res) => {
 };
 
 // Generate and send OTP
-const sendOTP = async (email) => {
-    logger.warn('sendOTP called')
+const sendOTP = async (email:string) => {
+    console.log('sendOTP called')
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
 
-    logger.error(process.env.NODEMAILER_EMAIL);
+    console.warn(process.env.NODEMAILER_EMAIL);
 
     let config = {
         service: 'gmail',
