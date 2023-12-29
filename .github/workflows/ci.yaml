@@ -1,0 +1,31 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master # or the branch you want to deploy from
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install pm2
+      run: npm install -g pm2
+
+    - name: SSH and deploy
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      shell: bash
+      run: |
+        echo "$SSH_PRIVATE_KEY" > keyfile
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        chmod 600 keyfile
+        mkdir -p ~/.ssh
+        cp known_hosts ~/.ssh/known_hosts
+        ssh -t -i keyfile ubuntu@ec2-16-170-250-205.eu-north-1.compute.amazonaws.com "sudo bash ~/deploy.sh"
+
+
