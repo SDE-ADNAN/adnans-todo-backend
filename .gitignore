@@ -9,7 +9,9 @@ warn.log
 debug.log
 
 package-lock.json
-
+.pem
+.cer
+.ppk
 # env files
 .env
 .env.test
