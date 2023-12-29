@@ -21,8 +21,21 @@ const app = (0, express_1.default)();
 dotenv_1.default.config({
     path: "./ENV/config.env"
 });
+// app.use(cors({
+//   origin: ['https://adnans-react-typescript-todo.netlify.app'], // Replace with your frontend domain
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+// }));
+const allowedOrigins = ['https://adnans-react-typescript-todo.netlify.app', ''];
 app.use((0, cors_1.default)({
-    origin: ['https://adnans-react-typescript-todo.netlify.app'],
+    origin: function (origin, callback) {
+        // Check if the request origin is allowed
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true); // Allow the request
+        }
+        else {
+            callback(new Error('Not allowed by CORS')); // Block the request
+        }
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 }));
 app.use((0, express_session_1.default)({
