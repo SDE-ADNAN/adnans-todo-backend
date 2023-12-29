@@ -21,7 +21,11 @@ dotenv.config({
   path: "./ENV/config.env"
 })
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://adnans-react-typescript-todo.netlify.app'], // Replace with your frontend domain
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+}));
+
 app.use(session({
   secret: 'your-secret-key', // Change this to your own secret key
   resave: false,

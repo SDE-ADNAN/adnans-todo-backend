@@ -21,7 +21,10 @@ const app = (0, express_1.default)();
 dotenv_1.default.config({
     path: "./ENV/config.env"
 });
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: ['https://adnans-react-typescript-todo.netlify.app'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+}));
 app.use((0, express_session_1.default)({
     secret: 'your-secret-key',
     resave: false,
