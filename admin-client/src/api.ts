@@ -12,7 +12,7 @@ export const API_URL_LOCAL = "http://192.168.0.100:3033/jarvis"
 // live one
 // export const API_URL_LIVE = "https://adnans-todo-backend.onrender.com/jarvis"
 // export const API_URL_LIVE = "http://ec2-16-170-250-205.eu-north-1.compute.amazonaws.com:3033/jarvis"
-export const API_URL_LIVE = "https://backend.3621.lol/jarvis"
+export const API_URL_LIVE = "https://taskmaster.3621.lol/jarvis"
 
 // isLive
 export const isLive = true;
