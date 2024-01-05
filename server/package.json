@@ -8,8 +8,9 @@
   "main": "./dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd ../admin-client && sudo rm -rf ../server/dist/public && sudo mkdir -p ../server/dist/public && cd ./build && sudo cp -r * ../../server/dist/public && cd ../../server && node ./dist/app.js",
-    "dev": "NODE_ENV=development nodemon ./dist/app.js"
+    "start": "npm run prepare-deploy && cd ../admin-client && sudo rm -rf ../server/dist/public && sudo mkdir -p ../server/dist/public && cd ./build && sudo cp -r * ../../server/dist/public && cd ../../server && node ./dist/app.js",
+    "dev": "NODE_ENV=development nodemon ./dist/app.js",
+    "prepare-deploy":"cd ../admin-client && npm run build && cd ../server && tsc"
   },
   "repository": {
     "type": "git",
