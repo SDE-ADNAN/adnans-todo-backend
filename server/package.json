@@ -8,7 +8,7 @@
   "main": "./dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd ../admin-client && rm -rf ../server/public && mkdir -p ../server/public && cd ./build && mv * ../../server/public && cd ../../server && node ./dist/app.js",
+    "start": "cd ../admin-client && sudo rm -rf ../server/public && sudo mkdir -p ../server/public && cd ./build && sudo mv * ../../server/public && cd ../../server && node ./dist/app.js",
     "dev": "NODE_ENV=development nodemon ./dist/app.js"
   },
   "repository": {
