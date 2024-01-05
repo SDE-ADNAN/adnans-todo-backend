@@ -42,8 +42,9 @@ app.use('/jarvis/admin', admin_1.default);
 // app.use('/', (req, res, next) => {
 //   res.send("<h1>Welcome to todo backend </h1>")
 // })
+// for serving clientside react pages ( which are built using "npm run build" or "vite build")
 app.use(express_1.default.static("public"));
-app.use("/*", (req, res) => {
+app.use("*", (req, res) => {
     res.sendFile(path_1.default.join(__dirname, "/public/index.html"));
 });
 mongoose_1.default

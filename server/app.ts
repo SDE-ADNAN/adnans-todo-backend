@@ -50,7 +50,7 @@ app.use('/jarvis/admin', adminRoutes);
 
 // for serving clientside react pages ( which are built using "npm run build" or "vite build")
 app.use(express.static("public"));
-app.use("/*", (req, res) => {
+app.use("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"))
 })
 
