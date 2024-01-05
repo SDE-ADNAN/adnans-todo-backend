@@ -7,6 +7,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import os from 'os';
+import path from 'path';
 
 const networkInterfaces = os.networkInterfaces();
 const hostAddresses: string[] = [];
@@ -43,9 +44,15 @@ app.use(upload.any()); // middleware to handle form-data
 app.use('/jarvis/auth', authRoutes);
 app.use('/jarvis/admin', adminRoutes);
 
-app.use('/', (req, res, next) => {
-  res.send("<h1>Welcome to todo backend </h1>")
+// app.use('/', (req, res, next) => {
+//   res.send("<h1>Welcome to todo backend </h1>")
+// })
+
+app.use(express.static("public"));
+app.use("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/index.html"))
 })
+
 mongoose
   .connect(
     process.env.MONGO_CONNECT_URL || ''
@@ -57,8 +64,6 @@ mongoose
   .catch(err => {
     console.log(err);
   });
-
-// var host = Object.values(require('os').networkInterfaces()).reduce((r:string, list) => r.concat(list.reduce((rr:string, i) => rr.concat(i.family === 'IPv4' && !i.internal && i.address || []), [])), [])
 
 Object.values(networkInterfaces).forEach((interfaces) => {
   if(interfaces)

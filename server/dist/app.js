@@ -12,6 +12,7 @@ const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const express_session_1 = __importDefault(require("express-session"));
 const os_1 = __importDefault(require("os"));
+const path_1 = __importDefault(require("path"));
 const networkInterfaces = os_1.default.networkInterfaces();
 const hostAddresses = [];
 // project imports
@@ -38,8 +39,12 @@ app.use(upload.any()); // middleware to handle form-data
 // app.use(express.json())
 app.use('/jarvis/auth', auth_1.default);
 app.use('/jarvis/admin', admin_1.default);
-app.use('/', (req, res, next) => {
-    res.send("<h1>Welcome to todo backend </h1>");
+// app.use('/', (req, res, next) => {
+//   res.send("<h1>Welcome to todo backend </h1>")
+// })
+app.use(express_1.default.static("public"));
+app.use("/*", (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, "/public/index.html"));
 });
 mongoose_1.default
     .connect(process.env.MONGO_CONNECT_URL || '')
@@ -50,7 +55,6 @@ mongoose_1.default
     .catch(err => {
     console.log(err);
 });
-// var host = Object.values(require('os').networkInterfaces()).reduce((r:string, list) => r.concat(list.reduce((rr:string, i) => rr.concat(i.family === 'IPv4' && !i.internal && i.address || []), [])), [])
 Object.values(networkInterfaces).forEach((interfaces) => {
     if (interfaces)
         interfaces.forEach((iface) => {
