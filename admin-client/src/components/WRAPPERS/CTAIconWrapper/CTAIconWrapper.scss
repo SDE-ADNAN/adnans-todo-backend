@@ -1,0 +1,14 @@
+.icon_Wrapper{
+    width: 24px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.513);
+      padding: 5px;
+      border-radius: 5px;
+      path {
+        fill: #0080ff;
+      }
+      &.dark {
+        background-color: unset;
+      }
+
+}

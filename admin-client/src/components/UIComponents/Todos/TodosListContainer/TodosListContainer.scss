@@ -1,0 +1,46 @@
+.todoListItems_container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+    overflow: scroll;
+    padding: 1px;
+
+    .status_container {
+        display: flex;
+        min-width: 325px;
+        max-width: 500px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        background: rgba(206, 206, 206, 0.27);
+    backdrop-filter: blur(15px);
+        outline: 0.5px solid #1f2025;
+        border: 1px solid #6d6d6d;
+        border-radius: 10px;
+
+        .title {
+            width: calc(100% - 10px);
+            background-color: #1f2025;
+            padding: 5px;
+            border-radius: 10px 10px 0 0;
+            background-color: rgba(255, 255, 255, 0.099);
+        }
+
+        .all_todos {
+            width: calc(100% - 7px);
+        }
+
+        &.Todo {
+            background-color: rgba(255, 255, 255, 0.099);
+            outline: 0.5px solid #1f2025;
+            border: 1px solid #6d6d6d;
+        }
+
+        &.dark {
+            background-color: rgba(255, 255, 255, 0.099);
+            outline: 0.5px solid #1f2025;
+            border: 1px solid #6d6d6d;
+        }
+    }
+}

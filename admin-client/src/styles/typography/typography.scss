@@ -1,0 +1,75 @@
+// _typography.scss
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Signika:wght@300;400;500;600;700&display=swap');
+
+// Font families
+$font-primary: 'Helvetica Neue', Arial, sans-serif;
+$font-secondary: 'Roboto', sans-serif;
+
+// Heading styles
+$heading1-size: 2.5rem;
+$heading2-size: 2rem;
+$heading3-size: 1.75rem;
+$heading4-size: 1.5rem;
+$heading5-size: 1.25rem;
+$heading6-size: 1rem;
+
+$heading1-font: $font-primary;
+$heading2-font: $font-primary;
+$heading3-font: $font-primary;
+$heading4-font: $font-primary;
+$heading5-font: $font-primary;
+$heading6-font: $font-primary;
+
+$heading1-line-height: 1.2;
+$heading2-line-height: 1.3;
+$heading3-line-height: 1.4;
+$heading4-line-height: 1.5;
+$heading5-line-height: 1.6;
+$heading6-line-height: 1.7;
+
+$heading1-font-weight: 700;
+$heading2-font-weight: 600;
+$heading3-font-weight: 600;
+$heading4-font-weight: 600;
+$heading5-font-weight: 600;
+$heading6-font-weight: 600;
+
+$heading1-color: #333;
+$heading2-color: #333;
+$heading3-color: #333;
+$heading4-color: #333;
+$heading5-color: #333;
+$heading6-color: #333;
+
+// Subheading styles
+$subheading-size: 1.1rem;
+$subheading-font: $font-secondary;
+$subheading-line-height: 1.4;
+$subheading-font-weight: 600;
+$subheading-color: #666;
+
+// Body text styles
+$body-size: 1rem;
+$body-font: $font-primary;
+$body-line-height: 1.6;
+$body-font-weight: 400;
+$body-color: #444;
+
+
+$default-font-size: 1rem;
+$default-font-weight: 300;
+$default-line-height: 1.6;
+
+$link_blue:#0080ff;
+
+$dark_mode_outline:1px solid #1f2025;
+$dark_mode_border:1px solid #6d6d6d;
+$dark_mode_bgColor:rgba(0, 0, 0, 0.54);
+
+@mixin typography($font-size: $default-font-size, $font-weight: $default-font-weight, $line-height: $default-line-height, $color: inherit) {
+  font-size: $font-size;
+  font-weight: $font-weight;
+  line-height: $line-height;
+  color: $color;
+}

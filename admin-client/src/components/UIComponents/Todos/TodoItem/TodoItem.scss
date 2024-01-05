@@ -1,0 +1,133 @@
+@import '../../../WRAPPERS/./DashboardWrapper/DashboardWrapper.scss';
+
+.todo_item_individual {
+  font-size: 24px;
+  font-weight: 400;
+  width: calc(100% - 20px);
+  background: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 3px 10px;
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  flex-direction: column;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  gap: 10px;
+
+
+  .status_mark {
+    width: 100%;
+
+    position: absolute;
+    height: 2px;
+    bottom: 0px;
+    left: 0;
+
+    &.Todo {
+      background-color: rgba(255, 225, 0, 0.684);
+    }
+
+    &.InProgress {
+      background-color: #0080ff;
+    }
+
+    &.Completed {
+      background-color: rgba(77, 255, 0, 0.684);
+    }
+
+    &.OnHold {
+      background-color: rgba(255, 136, 0, 0.684);
+    }
+  }
+
+  &.dark {
+    box-shadow: inset 0px 0px 2px rgba(255, 255, 255, 0.4);
+    background: $dash_contents_dark_mode_bgColor;
+    outline: $dash_contents_dark_mode_outline;
+    border: $dash_contents_dark_mode_border;
+    border: 0.5px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  &:hover {
+    box-shadow: inset 0px 0px 5px;
+  }
+
+  .date_and_time_ctas_container {
+    display: flex;
+    width: -webkit-fill-available;
+    justify-content: space-evenly;
+
+    .date_and_time {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 3px 3px;
+      border-radius: 10px;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80px;
+      justify-content: center;
+      border-radius: 50px;
+      background: linear-gradient(145deg, #cacaca, #f0f0f0);
+      box-shadow: 20px 20px 60px #bebebe,
+        -20px -20px 60px #ffffff;
+
+
+      .text {
+        font-size: 8px;
+        font-weight: 900;
+        color: #3c3c3c;
+
+        &.dark {
+          color: rgb(255, 255, 255, 90%);
+        }
+      }
+    }
+
+    .todo_CTAs_container {
+      max-width: 100px;
+      width: 80px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-left: 5px;
+      justify-content: space-between;
+
+
+    }
+  }
+
+
+
+  .todo_item_title {
+    flex-grow: 1;
+    width: calc(100% - 0px);
+    font-weight: 400;
+    color: rgb(0 0 0);
+    font-size: 16px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    white-space: wrap !important;
+
+    &.dark {
+      color: rgb(255, 255, 255, 90%);
+    }
+  }
+
+
+}
+
+
+.del_cncl {
+  display: flex;
+  justify-content: space-evenly;
+}

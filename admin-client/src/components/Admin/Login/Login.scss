@@ -1,0 +1,46 @@
+.main_login_container{
+    width: 400px;
+    padding: 35px;
+
+    h2{
+        margin-top: 0;
+    }
+
+    .glassmorphic-background{
+        padding:20px 30px
+    }
+}
+
+.login__form{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    row-gap: 20px;
+
+    div.inputdiv{
+        input{
+            width:93%;
+            margin-top: 6px;
+        }
+    }
+}
+
+.login__btn{
+    background-color: #e7f0ff;
+    border-radius: 5px;
+    font-family: 'Signika', sans-serif;
+    font-size: 20px;
+    // width:50px;
+
+    &.dark{
+        color:black
+    }
+}
+
+.sign_in_redirect{
+    margin: 10px 0;
+
+    span{
+        color:rgb(28, 167, 253)
+    }
+}

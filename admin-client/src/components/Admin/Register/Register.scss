@@ -1,0 +1,17 @@
+.main_register_container{
+    width: 400px;
+
+    .sign_in_redirect{
+        width:100%;
+
+        a{
+            text-decoration: none;
+        }
+
+        span{
+            color:rgb(28, 167, 253);
+            font-weight: 500;
+            padding-left: 10px;
+        }
+    }
+}

@@ -1,0 +1,86 @@
+@import '../../../styles/typography/typography.scss';
+
+// AddIcon component styles
+.cross_icon {
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    // transition: background-color 0.2s ease-in-out;
+    border: 2px solid rgb(255, 0, 0);
+    opacity:0.4;
+
+  
+    // Default size
+    width: 25px;
+    height: 25px;
+  
+    // Optional size passed as a prop
+    
+    &.large {
+      width: 40px;
+      height: 40px;
+    }
+  
+    // Optional background color passed as a prop
+    &.custom-background {
+      background-color: lightblue;
+    }
+
+    &.darkMode{
+        border:  3px solid $link_blue;
+    }
+  
+    .line1, .line2 {
+      width: 70%;
+      height: 4px;
+      background: rgba(255, 0, 0, 0.68);
+      backdrop-filter: blur(4px);
+      border-radius: 10px;
+
+      &.darkMode{
+        background: $link_blue;
+        }
+
+        &.danger{
+            background: rgba(231, 70, 70);
+        }
+    }
+  
+    .line1 {
+      position: absolute;
+      transform: rotate(45deg);
+    }
+    .line2 {
+      position: absolute;
+      transform: rotate(-45deg);
+    }
+  
+    #cross_tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      // transition: opacity 0.2s ease-in-out;
+    }
+  
+  
+    &:hover #cross_tooltip {
+      opacity: 1;
+    }
+
+    &:hover{
+        opacity:0.7
+    }
+  }
+  
