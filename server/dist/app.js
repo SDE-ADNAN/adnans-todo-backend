@@ -44,7 +44,7 @@ app.use('/jarvis/admin', admin_1.default);
 // })
 // for serving clientside react pages ( which are built using "npm run build" or "vite build")
 app.use(express_1.default.static("public"));
-app.use("*", (req, res) => {
+app.use("/*", (req, res) => {
     res.sendFile(path_1.default.join(__dirname, "/public/index.html"));
 });
 mongoose_1.default
