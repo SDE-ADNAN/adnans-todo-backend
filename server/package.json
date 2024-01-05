@@ -8,7 +8,7 @@
   "main": "./dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node ./dist/app.js",
+    "start": "NODE_ENV=production cd ../admin-client && npm run build && rm -rf ../server/public && mkdir -p ../server/public && mv ./build/* ../server/public && cd ../server && node ./dist/app.js",
     "dev": "NODE_ENV=development nodemon ./dist/app.js"
   },
   "repository": {
