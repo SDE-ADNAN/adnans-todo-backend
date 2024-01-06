@@ -133,7 +133,7 @@ const App: React.FC = () => {
 
   return (
     <div className={`main_container ${theme.dark ? 'dark_mode' : 'light_mode'}`}>
-      {theme.dark ? <div className="image_container"><img src={bgDark} alt='bg'></img></div> : <div className="image_container"><img src={bgLight} alt='bg'></img></div>}
+      {theme.dark ? <div className="image_container"><img src={bgDark} alt='bg' loading="lazy"></img></div> : <div className="image_container"><img src={bgLight} alt='bg' loading="lazy"></img></div>}
       {/* <div className="image_backdrop"></div> */}
 
       <Routes>
