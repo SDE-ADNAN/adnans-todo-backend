@@ -32,9 +32,9 @@ const darkModeSvgContent =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" x="0px" y="0px"><path d="M14 8C14 8.55228 13.5523 9 13 9C12.4477 9 12 8.55228 12 8C12 7.44772 12.4477 7 13 7C13.5523 7 14 7.44772 14 8Z" fill="black"/><path d="M17.5 18C18.3284 18 19 17.3284 19 16.5C19 15.6716 18.3284 15 17.5 15C16.6716 15 16 15.6716 16 16.5C16 17.3284 16.6716 18 17.5 18Z" fill="black"/><path d="M13 19C13 19.5523 12.5523 20 12 20C11.4477 20 11 19.5523 11 19C11 18.4477 11.4477 18 12 18C12.5523 18 13 18.4477 13 19Z" fill="black"/><path d="M19 10C19.5523 10 20 9.55228 20 9C20 8.44772 19.5523 8 19 8C18.4477 8 18 8.44772 18 9C18 9.55228 18.4477 10 19 10Z" fill="black"/><path d="M13 14.5C13 14.7761 12.7761 15 12.5 15C12.2239 15 12 14.7761 12 14.5C12 14.2239 12.2239 14 12.5 14C12.7761 14 13 14.2239 13 14.5Z" fill="black"/><path d="M14.5 13C14.7761 13 15 12.7761 15 12.5C15 12.2239 14.7761 12 14.5 12C14.2239 12 14 12.2239 14 12.5C14 12.7761 14.2239 13 14.5 13Z" fill="black"/><path d="M10 4.5C10 4.77614 9.77614 5 9.5 5C9.22386 5 9 4.77614 9 4.5C9 4.22386 9.22386 4 9.5 4C9.77614 4 10 4.22386 10 4.5Z" fill="black"/><path d="M15.5 6C15.7761 6 16 5.77614 16 5.5C16 5.22386 15.7761 5 15.5 5C15.2239 5 15 5.22386 15 5.5C15 5.77614 15.2239 6 15.5 6Z" fill="black"/><path d="M6 7.5C6 7.77614 5.77614 8 5.5 8C5.22386 8 5 7.77614 5 7.5C5 7.22386 5.22386 7 5.5 7C5.77614 7 6 7.22386 6 7.5Z" fill="black"/><path d="M5.5 16C5.77614 16 6 15.7761 6 15.5C6 15.2239 5.77614 15 5.5 15C5.22386 15 5 15.2239 5 15.5C5 15.7761 5.22386 16 5.5 16Z" fill="black"/><path d="M8 18.5C8 18.7761 7.77614 19 7.5 19C7.22386 19 7 18.7761 7 18.5C7 18.2239 7.22386 18 7.5 18C7.77614 18 8 18.2239 8 18.5Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10 11.5C10 12.8807 8.88071 14 7.5 14C6.11929 14 5 12.8807 5 11.5C5 10.1193 6.11929 9 7.5 9C8.88071 9 10 10.1193 10 11.5ZM8 11.5C8 11.7761 7.77614 12 7.5 12C7.22386 12 7 11.7761 7 11.5C7 11.2239 7.22386 11 7.5 11C7.77614 11 8 11.2239 8 11.5Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="black"/></svg>';
 
 const sideBarData = [
-    { name: "Todos", url: "/todos" },
+    { name: "Tasks", url: "/tasks" },
     { name: null, url: null },
-    { name: "All Todos", url: "/all-todos" },
+    { name: "All Tasks", url: "/all-tasks" },
     { name: "Profile", url: "/profile" },
 ];
 const navLinks = [
@@ -146,7 +146,7 @@ const DashboardWrapper: React.FC<DashboardWrapperProps> = ({
                     <img src={logo} alt="logo"></img>
                 </div>
                 <div className={includeDarkClass("navbar_heading", darkMode)}>
-                    Todos
+                    Task Master
                 </div>
                 <div className={includeDarkClass("navbar_void", darkMode)}></div>
                 <div className={includeDarkClass("navbar_navlinks", darkMode)}>
@@ -247,7 +247,7 @@ const DashboardWrapper: React.FC<DashboardWrapperProps> = ({
                                 <div className={includeDarkClass("button_wrapper", darkMode)}>
                                     <button onClick={() => setIsOpen(!isOpen)}>
                                         <div className={includeDarkClass("btn_text", darkMode)}>
-                                            Add todo
+                                            Add task
                                         </div>
                                         <AddIcon showToolTip={false} size={20} />
                                     </button>

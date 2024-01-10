@@ -153,12 +153,12 @@ const App: React.FC = () => {
           }>
             {/* Nested routes for the dashboard */}
             {/* <Route index element={<TodosListContainer fetchAllUserData={fetchAllUserData} todosArray={allTodos} />} /> */}
-            <Route index path='todos' element={<TodosListContainer fetchAllUserData={fetchAllUserData} todosArray={allTodos} />} />
-            <Route index path='all-todos' element={<TodosListContainer isAllTodosContainer={true} fetchAllUserData={fetchAllUserData} todosArray={allTodos} />} />
-            <Route path='todos/:parentTodo_id' element={<TodoDetails />} />
-            <Route path='todos/:parentTodo_id/subTodo/:childTodo_id' element={<TodoDetails />} />
+            <Route index path='tasks' element={<TodosListContainer fetchAllUserData={fetchAllUserData} todosArray={allTodos} />} />
+            <Route index path='all-tasks' element={<TodosListContainer isAllTodosContainer={true} fetchAllUserData={fetchAllUserData} todosArray={allTodos} />} />
+            <Route path='tasks/:parentTodo_id' element={<TodoDetails />} />
+            <Route path='tasks/:parentTodo_id/subTask/:childTodo_id' element={<TodoDetails />} />
             <Route path='profile' element={<Profile handleLogout={handleLogout} fetchAllUserData={fetchAllUserData} />} />
-            <Route path='todos' element={<Navigate to='/todos' />} />
+            <Route path='tasks' element={<Navigate to='/tasks' />} />
 
             {/* Fallback route for any other unmatched paths */}
             <Route path="*" element={<NotFound isAuthenticated={isAuthenticated} />} />

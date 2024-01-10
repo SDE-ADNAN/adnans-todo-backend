@@ -97,9 +97,9 @@ const TodoListItem: React.FC<Partial<TodoListItemProps>> = ({ item, fetchAllUser
     const handleRedirect = () => {
         const id = item._id;
         if (!isSubTodo) {
-            navigate(`/todos/${id}`)
+            navigate(`/tasks/${id}`)
         } else {
-            navigate(`/todos/${parentTodoId}/subTodo/${id}`)
+            navigate(`/tasks/${parentTodoId}/subTask/${id}`)
         }
     }
     return (

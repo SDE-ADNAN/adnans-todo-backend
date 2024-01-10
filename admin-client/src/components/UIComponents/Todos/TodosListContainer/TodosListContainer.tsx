@@ -60,21 +60,21 @@ const TodosListContainer: React.FC<Partial<TodoListContainerProps>> = ({ isAllTo
 
     useEffect(() => {
         if (isSubTodoContainer) {
-            dispatch(setCurrentPage('Todo Details'))
+            dispatch(setCurrentPage('Task Details'))
         } else {
-            dispatch(setCurrentPage('All Todos'))
+            dispatch(setCurrentPage('All Tasks'))
         }
     }, [dispatch, isSubTodoContainer])
     return (
         <div className={includeDarkClass(`todoListItems_container`, darkMode)}>
             {
             isAllTodosContainer && todosArray ? 
-            <Container title={'All todos'} hideParent={true} className={'Sub-Todos'} todosArray={todosArray} isSubTodoContainer={isSubTodoContainer} parentTodoId={parentTodoId} fetchAllUserData={fetchAllUserData} fetchParentTodo={fetchParentTodo} /> 
+            <Container title={'All tasks'} hideParent={true} className={'Sub-Todos'} todosArray={todosArray} isSubTodoContainer={isSubTodoContainer} parentTodoId={parentTodoId} fetchAllUserData={fetchAllUserData} fetchParentTodo={fetchParentTodo} /> 
             : isSubTodoContainer && todosArray ?
-                <Container title={'Sub-Todos'} className={'Sub-Todos'} todosArray={todosArray} isSubTodoContainer={isSubTodoContainer} parentTodoId={parentTodoId} fetchAllUserData={fetchAllUserData} fetchParentTodo={fetchParentTodo} /> 
+                <Container title={'Sub-Tasks'} className={'Sub-Todos'} todosArray={todosArray} isSubTodoContainer={isSubTodoContainer} parentTodoId={parentTodoId} fetchAllUserData={fetchAllUserData} fetchParentTodo={fetchParentTodo} /> 
                 : <>
                     {User && User.statusFiltered && User.statusFiltered.__filteredTodos ?
-                        <Container title={'Todo'} className={'Todo'} todosArray={User.statusFiltered.__filteredTodos} isSubTodoContainer={isSubTodoContainer} parentTodoId={parentTodoId} fetchAllUserData={fetchAllUserData} fetchParentTodo={fetchParentTodo} /> 
+                        <Container title={'Task'} className={'Todo'} todosArray={User.statusFiltered.__filteredTodos} isSubTodoContainer={isSubTodoContainer} parentTodoId={parentTodoId} fetchAllUserData={fetchAllUserData} fetchParentTodo={fetchParentTodo} /> 
                         : <></>
                     }
                     {User && User.statusFiltered && User.statusFiltered.__filteredInProgress ?
