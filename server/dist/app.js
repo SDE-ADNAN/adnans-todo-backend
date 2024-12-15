@@ -23,12 +23,12 @@ dotenv_1.default.config({
     path: "./ENV/config.env"
 });
 app.use((0, cors_1.default)({
-    origin: '*',
+    origin: '*', // Replace with your frontend domain
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }));
 app.use((0, express_session_1.default)({
-    secret: 'your-secret-key',
+    secret: 'your-secret-key', // Change this to your own secret key
     resave: false,
     saveUninitialized: true
 }));

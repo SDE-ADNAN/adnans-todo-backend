@@ -84,9 +84,9 @@ const getUserProfile = (req, res) => {
     User_Model_js_1.default.findById(userId)
         .populate({
         path: 'todos',
-        model: 'Todo',
+        model: 'Todo', // Populate the todos field with actual Todo objects
         populate: {
-            path: 'todo',
+            path: 'todo', // Populate the todo field inside each Todo object (subTodos)
             model: 'SubTodo' // Use the SubTodo model to populate the todo field
         }
     })

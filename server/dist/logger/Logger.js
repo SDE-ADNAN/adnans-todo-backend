@@ -8,10 +8,10 @@ const colors_1 = __importDefault(require("colors"));
 const winston_2 = require("winston");
 const { combine, timestamp, colorize, printf } = winston_2.format;
 const levels = {
-    error: 0,
-    warn: 1,
-    info: 2,
-    http: 3,
+    error: 0, // red
+    warn: 1, // yellow
+    info: 2, // bold bgGrey
+    http: 3, // green bg
     verbose: 4,
     debug: 5,
     silly: 6
